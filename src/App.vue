@@ -1,15 +1,15 @@
 <template>
-  <v-app>
-    <v-app-bar app>
+  <VApp>
+    <VAppBar app>
       <v-toolbar-title class="headline">
         Multitrack Player
       </v-toolbar-title>
-    </v-app-bar>
+    </VAppBar>
 
     <v-content>
       <router-view />
     </v-content>
-  </v-app>
+  </VApp>
 </template>
 
 <script>

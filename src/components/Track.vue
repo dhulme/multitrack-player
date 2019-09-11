@@ -1,29 +1,28 @@
 <template>
-  <v-row>
-    <v-col>
-      <div>{{ number }}. {{ name }}</div>
-      <v-btn text icon>
-        <v-icon>{{ active ? 'volume_up' : 'volume_mute' }}</v-icon>
-      </v-btn>
-      <v-slider v-model="gain" label="Gain" />
-    </v-col>
-    <v-col>
-      <audio :src="source" ref="audio" />
+  <VRow>
+    <VCol>
+      <div>{{ number }}. {{ track.name }}</div>
+      <VBtn text icon>
+        <VIcon>{{ track.active ? 'volume_up' : 'volume_mute' }}</VIcon>
+      </VBtn>
+      <VSlider v-model="track.gain" label="Gain" />
+    </VCol>
+    <VCol>
+      <audio :src="track.source" ref="audio" />
       <div ref="waveformContainer" />
-    </v-col>
-  </v-row>
+    </VCol>
+  </VRow>
 </template>
 
 <script>
 import peaks from 'peaks.js';
+import Track from '../Track';
 
 export default {
   props: {
-    active: Boolean,
     audioContext: AudioContext,
-    gain: Number,
-    name: String,
-    number: Number
+    number: Number,
+    track: Track
   },
   mounted() {
     peaks.init({

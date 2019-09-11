@@ -1,18 +1,21 @@
 <template>
   <div>
-    <controls />
+    <Controls />
+    <TrackManager />
   </div>
 </template>
 
 <script>
 import Controls from '@/components/Controls';
+import TrackManager from '@/components/TrackManager';
 // @ is an alias to /src
 // const audioContext = new AudioContext();
 // const gainNode = audioContext.createGain();
 
 export default {
   components: {
-    Controls
+    Controls,
+    TrackManager
   },
   name: 'home',
   data() {
