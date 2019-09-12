@@ -1,10 +1,10 @@
 <template>
   <VApp>
-    <VAppBar app>
+    <!-- <VAppBar app>
       <v-toolbar-title class="headline">
         Multitrack Player
       </v-toolbar-title>
-    </VAppBar>
+    </VAppBar> -->
 
     <v-content>
       <router-view />

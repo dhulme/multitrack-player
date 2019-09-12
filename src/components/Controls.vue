@@ -6,7 +6,9 @@
     <v-btn text icon @click="$store.dispatch('stop')">
       <v-icon>mdi-stop</v-icon>
     </v-btn>
-    {{ this.$store.state.playState }}
+
+    <!-- <VBtn :outline="$store.state.clickActive" @click="$store.dispatch('toggleClickActive')">Click</VBtn> -->
+    <VTextField :value="$store.state.clickBpm" />
   </v-row>
 </template>
 

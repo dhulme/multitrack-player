@@ -1,36 +1,48 @@
 <template>
-  <VRow>
-    <VCol>
-      <div>{{ number }}. {{ track.name }}</div>
-      <VBtn text icon>
-        <VIcon>{{ track.active ? 'volume_up' : 'volume_mute' }}</VIcon>
-      </VBtn>
-      <VSlider v-model="track.gain" label="Gain" />
-    </VCol>
-    <VCol>
-      <audio :src="track.source" ref="audio" />
-      <div ref="waveformContainer" />
-    </VCol>
-  </VRow>
+  <VCard>
+    <VRow>
+      <VCol cols="3">
+        <!-- <div>{{ number }}. {{ track.name }}</div> -->
+        <!-- <VBtn text icon>
+        <VIcon>{{ track.active ? 'mdi-volume-up' : 'mdi-volume-mute' }}</VIcon>
+      </VBtn> -->
+        <VTextField v-model="track.name" />
+        <VBtn
+          :outlined="!track.active"
+          color="primary"
+          @click="track.active = !track.active"
+          >{{ number }}</VBtn
+        >
+        <VSlider v-model="track.gain" label="Gain" />
+        <audio src="" ref="audio" />
+      </VCol>
+      <VCol cols="9">
+        <VProgressCircular v-if="!track.ready" indeterminate />
+        <div ref="waveformContainer" :style="{ visibility: 'hidden' }" />
+      </VCol>
+    </VRow>
+  </VCard>
 </template>
 
 <script>
-import peaks from 'peaks.js';
 import Track from '../Track';
 
 export default {
   props: {
-    audioContext: AudioContext,
     number: Number,
     track: Track
   },
-  mounted() {
-    peaks.init({
-      container: this.$refs.waveformContainer,
-      mediaElement: this.$refs.audio,
-      audioContext: this.props.audioContext,
-      height: 100
-    });
+  mounted() {},
+  watch: {
+    'track.ready'() {
+      this.track.initPeaks({
+        mediaElement: this.$refs.audio,
+        containers: {
+          overview: this.$refs.waveformContainer
+        },
+        height: 50
+      });
+    }
   }
 };
 </script>

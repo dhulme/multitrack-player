@@ -2,11 +2,11 @@
   <div>
     <VFileInput label="Track" @change="addTrack" />
     <Track
-      v-for="track in $store.state.tracks"
+      v-for="(track, index) in $store.state.tracks"
       :track="track"
+      :number="index + 1"
       :key="track.id"
     />
-    {{ $store.state.tracks }}
   </div>
 </template>
 
