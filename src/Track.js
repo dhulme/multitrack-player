@@ -10,25 +10,37 @@ export default class Track {
     this.ready = false;
     this.startedTime = null;
 
-    audioContext.decodeAudioData(arrayBuffer, buffer => {
-      this.source = audioContext.createBufferSource();
-      this.source.buffer = buffer;
-      this.source.connect(audioContext.destination);
+    audioContext.decodeAudioData(arrayBuffer, audioBuffer => {
+      this.audioBuffer = audioBuffer;
+      this.initAudioSource();
       this.ready = true;
     });
   }
 
+  initAudioSource() {
+    this.audioSource = this.audioContext.createBufferSource();
+    this.audioSource.buffer = this.audioBuffer;
+    this.audioSource.connect(this.audioContext.destination);
+  }
+
   play(when) {
-    this.source.start(when);
+    this.audioSource.start(when);
     this.startedTime = when;
   }
 
   stop(when) {
-    this.source.stop(when);
+    this.audioSource.stop(when);
+    this.setPeaksPlayheadTime(0);
+    this.startedTime = null;
+    this.initAudioSource();
   }
 
-  getPlayheadTime() {
+  calculatePlayheadTime() {
     return this.audioContext.currentTime - this.startedTime;
+  }
+
+  setPeaksPlayheadTime(playheadTime) {
+    this.peaksOverview._playheadLayer.stop(playheadTime);
   }
 
   initPeaks(options) {
@@ -36,7 +48,7 @@ export default class Track {
       {
         ...options,
         webAudio: {
-          audioBuffer: this.source.buffer
+          audioBuffer: this.audioSource.buffer
         }
       },
       () => {
@@ -46,8 +58,8 @@ export default class Track {
   }
 
   eventLoop() {
-    if (this.peaksOverview && this.startedTime) {
-      this.peaksOverview._playheadLayer.stop(this.getPlayheadTime());
+    if (this.peaksOverview && this.startedTime !== null) {
+      this.setPeaksPlayheadTime(this.calculatePlayheadTime());
     }
   }
 }

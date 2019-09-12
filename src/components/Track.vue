@@ -18,7 +18,7 @@
       </VCol>
       <VCol cols="9">
         <VProgressCircular v-if="!track.ready" indeterminate />
-        <div ref="waveformContainer" :style="{ visibility: 'hidden' }" />
+        <div ref="waveformContainer" />
       </VCol>
     </VRow>
   </VCard>
