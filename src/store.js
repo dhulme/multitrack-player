@@ -5,6 +5,11 @@ import Track from './Track';
 Vue.use(Vuex);
 
 const audioContext = new AudioContext();
+const stereoPannerNode = new StereoPannerNode(audioContext, {
+  pan: 0
+});
+
+//stereoPannerNode.pan.value = -1;
 
 const store = new Vuex.Store({
   state: {
@@ -65,7 +70,8 @@ const store = new Vuex.Store({
     addTrack({ commit }, arrayBuffer) {
       const track = new Track({
         arrayBuffer,
-        audioContext
+        audioContext,
+        stereoPannerNode
       });
       commit('addTrack', track);
     },

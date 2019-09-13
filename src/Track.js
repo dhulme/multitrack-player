@@ -2,10 +2,11 @@ let id = 0; // TODO improve ID mechanism
 import peaks from 'peaks.js';
 
 export default class Track {
-  constructor({ arrayBuffer, audioContext }) {
+  constructor({ arrayBuffer, audioContext, stereoPannerNode }) {
     this.id = id++;
     this.name = `Track ${id}`;
     this.audioContext = audioContext;
+    this.stereoPannerNode = stereoPannerNode;
     this.ready = false;
     this.gainNode = audioContext.createGain();
 
@@ -21,6 +22,7 @@ export default class Track {
     this.audioSource.buffer = this.audioBuffer;
     this.audioSource
       .connect(this.gainNode)
+      .connect(this.stereoPannerNode)
       .connect(this.audioContext.destination);
   }
 
