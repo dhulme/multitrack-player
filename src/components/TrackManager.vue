@@ -1,6 +1,6 @@
 <template>
   <div>
-    <VFileInput label="Track" @change="addTrack" />
+    <VFileInput label="Track" @change="addTrack" :value="files" multiple />
     <Track
       v-for="(track, index) in $store.state.tracks"
       :track="track"
@@ -17,13 +17,25 @@ export default {
   components: {
     Track
   },
+  data() {
+    return {
+      files: []
+    };
+  },
   methods: {
-    addTrack(file) {
-      const fileReader = new FileReader();
-      fileReader.addEventListener('load', () => {
-        this.$store.dispatch('addTrack', fileReader.result);
+    addTrack(files) {
+      if (!files.length) {
+        return;
+      }
+
+      files.forEach(file => {
+        const fileReader = new FileReader();
+        fileReader.readAsArrayBuffer(file);
+        fileReader.addEventListener('load', () => {
+          this.$store.dispatch('addTrack', fileReader.result);
+        });
       });
-      fileReader.readAsArrayBuffer(file);
+      this.files = [];
     }
   }
 };

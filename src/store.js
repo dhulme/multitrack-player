@@ -53,9 +53,11 @@ const store = new Vuex.Store({
       }
     },
     stop({ commit, state }) {
+      if (state.playState === 'playing') {
+        state.tracks.forEach(track => track.stop());
+      }
       commit('setPlayState', 'stopped');
       commit('setPlayPosition', 0);
-      state.tracks.forEach(track => track.stop());
     },
     addTrack({ commit }, arrayBuffer) {
       const track = new Track({

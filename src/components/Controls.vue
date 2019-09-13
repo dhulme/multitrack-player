@@ -1,19 +1,30 @@
 <template>
-  <v-row>
-    <v-btn text icon @click="$store.dispatch('playPause')">
-      <v-icon>{{ playPauseIcon }}</v-icon>
-    </v-btn>
-    <v-btn text icon @click="$store.dispatch('stop')">
-      <v-icon>mdi-stop</v-icon>
-    </v-btn>
+  <VRow>
+    <VBtn text icon @click="$store.dispatch('playPause')">
+      <VIcon>{{ playPauseIcon }}</VIcon>
+    </VBtn>
+    <VBtn text icon @click="$store.dispatch('stop')">
+      <VIcon>mdi-stop</VIcon>
+    </VBtn>
 
-    <!-- <VBtn :outline="$store.state.clickActive" @click="$store.dispatch('toggleClickActive')">Click</VBtn> -->
+    <VBtn
+      :outlined="$store.state.clickActive"
+      @click="$store.dispatch('toggleClickActive')"
+      >Click</VBtn
+    >
     <VTextField :value="$store.state.clickBpm" />
-  </v-row>
+
+    <Clock />
+  </VRow>
 </template>
 
 <script>
+import Clock from './Clock';
+
 export default {
+  components: {
+    Clock
+  },
   methods: {},
   computed: {
     playPauseIcon() {
