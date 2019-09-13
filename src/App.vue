@@ -1,10 +1,12 @@
 <template>
   <VApp>
-    <!-- <VAppBar app>
+    <VAppBar app>
       <v-toolbar-title class="headline">
         Multitrack Player
       </v-toolbar-title>
-    </VAppBar> -->
+      <VSpacer />
+      <Controls />
+    </VAppBar>
 
     <v-content>
       <router-view />
@@ -13,5 +15,11 @@
 </template>
 
 <script>
-export default {};
+import Controls from '@/components/Controls';
+
+export default {
+  components: {
+    Controls
+  }
+};
 </script>

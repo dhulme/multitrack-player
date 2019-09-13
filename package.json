@@ -5,10 +5,11 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-		"lint": "vue-cli-service lint",
-		"start": "serve"
+    "lint": "vue-cli-service lint",
+    "start": "serve"
   },
   "dependencies": {
+    "@mdi/js": "^4.4.95",
     "core-js": "^2.6.5",
     "peaks.js": "^0.13.0",
     "register-service-worker": "^1.6.2",
@@ -18,7 +19,6 @@
     "vuex": "^3.0.1"
   },
   "devDependencies": {
-    "@mdi/font": "^4.4.95",
     "@vue/cli-plugin-babel": "^3.11.0",
     "@vue/cli-plugin-eslint": "^3.11.0",
     "@vue/cli-plugin-pwa": "^3.11.0",

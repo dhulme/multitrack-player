@@ -17,7 +17,13 @@ const store = new Vuex.Store({
     playPosition: 0,
     tracks: [],
     clickActive: false,
-    clickBpm: '72'
+    clickBpm: '72',
+    masterGainValue: 1
+  },
+  getters: {
+    getTrack(state) {
+      return track => state.tracks.find(_ => _ === track);
+    }
   },
   mutations: {
     setPlayState(state, value) {
@@ -37,6 +43,15 @@ const store = new Vuex.Store({
     },
     setPlayPosition(state, value) {
       state.playPosition = value;
+    },
+    setMasterGainValue(state, value) {
+      state.masterGainValue = value;
+    },
+    setTrackGainValue(state, { track, value }) {
+      track.gainValue = value;
+    },
+    setTrackActive(state, { track, value }) {
+      track.active = value;
     }
   },
   actions: {
@@ -71,7 +86,8 @@ const store = new Vuex.Store({
       const track = new Track({
         arrayBuffer,
         audioContext,
-        stereoPannerNode
+        stereoPannerNode,
+        store
       });
       commit('addTrack', track);
     },
@@ -80,6 +96,18 @@ const store = new Vuex.Store({
     },
     toggleClickActive({ commit, state }) {
       commit('setClickActive', !state.clickActive);
+    },
+    setMasterGainValue({ commit, state }, value) {
+      commit('setMasterGainValue', value);
+      state.tracks.forEach(track => track.setGain(value));
+    },
+    setTrackGainValue({ commit, state }, { track, value }) {
+      commit('setTrackGainValue', { track, value });
+      track.setGain(state.masterGainValue);
+    },
+    setTrackActive({ commit, state }, { track, value }) {
+      commit('setTrackActive', { track, value });
+      track.setGain(state.masterGainValue);
     }
   }
 });

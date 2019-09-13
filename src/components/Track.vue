@@ -1,22 +1,40 @@
 <template>
-  <VCard>
-    <VRow>
-      <VCol cols="3">
-        <VTextField v-model="track.name" />
-        <VBtn :outlined="!active" color="primary" @click="active = !active">{{
-          number
-        }}</VBtn>
-        <VSlider v-model="gain" label="Gain" min="0" max="2" step="0.01" />
-        <VBtn text icon @click="remove">
-          <VIcon>mdi-delete</VIcon>
-        </VBtn>
-        <audio src="" ref="audio" />
-      </VCol>
-      <VCol cols="9">
-        <VProgressCircular v-if="!track.ready" indeterminate />
-        <div ref="waveformContainer" />
-      </VCol>
-    </VRow>
+  <VCard class="mb-4">
+    <VCardText>
+      <VRow>
+        <VCol cols="3">
+          <VTextField v-model="track.name" />
+          <VRow dense justify="space-between">
+            <VBtn
+              :outlined="!track.active"
+              color="primary"
+              @click="toggleActive"
+              >{{ number }}</VBtn
+            >
+            <VBtn :outlined="false" color="tertiary" @click="toggleActive"
+              >Solo</VBtn
+            >
+            <VBtn icon @click="remove">
+              <VIcon>mdi-delete</VIcon>
+            </VBtn>
+          </VRow>
+          <VSlider
+            hide-details
+            class="mt-4"
+            v-model="gain"
+            min="0"
+            max="1.5"
+            step="0.01"
+          />
+
+          <audio src="" ref="audio" />
+        </VCol>
+        <VCol cols="9">
+          <VProgressCircular v-if="!track.ready" indeterminate />
+          <div ref="waveformContainer" />
+        </VCol>
+      </VRow>
+    </VCardText>
   </VCard>
 </template>
 
@@ -24,17 +42,24 @@
 import Track from '../Track';
 
 export default {
-  data() {
-    return {
-      gain: 1,
-      active: true
-    };
-  },
   props: {
     number: Number,
     track: Track
   },
   mounted() {},
+  computed: {
+    gain: {
+      get() {
+        return this.track.gainValue;
+      },
+      set(value) {
+        return this.$store.dispatch('setTrackGainValue', {
+          track: this.track,
+          value
+        });
+      }
+    }
+  },
   watch: {
     'track.ready'() {
       this.track.initPeaks({
@@ -42,13 +67,8 @@ export default {
         containers: {
           overview: this.$refs.waveformContainer
         },
-        height: 50
+        height: 150
       });
-    },
-    gain(value) {
-      if (this.active) {
-        this.track.setGainValue(value);
-      }
     },
     active(active) {
       this.track.setGainValue(active ? this.gain : 0);
@@ -57,7 +77,19 @@ export default {
   methods: {
     remove() {
       this.$store.dispatch('removeTrack', this.track);
+    },
+    toggleActive() {
+      this.$store.dispatch('setTrackActive', {
+        track: this.track,
+        value: !this.track.active
+      });
     }
   }
 };
 </script>
+
+<style lang="scss" scoped>
+audio {
+  display: none;
+}
+</style>

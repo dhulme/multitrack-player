@@ -1,10 +1,10 @@
 <template>
-  <VRow>
-    <VCol>{{ minutes }}</VCol>
-    <VCol>:</VCol>
-    <VCol>{{ seconds }}</VCol>
-    <VCol>:</VCol>
-    <VCol>{{ milliseconds }}</VCol>
+  <VRow class="text-center container">
+    <VCol cols="3">{{ minutes }}</VCol>
+    <VCol cols="1">:</VCol>
+    <VCol cols="3">{{ seconds }}</VCol>
+    <VCol cols="1">:</VCol>
+    <VCol cols="3">{{ milliseconds }}</VCol>
   </VRow>
 </template>
 
@@ -26,3 +26,15 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.container {
+  max-width: 15rem;
+  min-width: 15rem;
+  user-select: none;
+
+  & > div {
+    padding: 0;
+  }
+}
+</style>

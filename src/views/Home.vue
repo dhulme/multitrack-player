@@ -1,12 +1,10 @@
 <template>
-  <div>
-    <Controls />
+  <VContainer>
     <TrackManager />
-  </div>
+  </VContainer>
 </template>
 
 <script>
-import Controls from '@/components/Controls';
 import TrackManager from '@/components/TrackManager';
 // @ is an alias to /src
 // const audioContext = new AudioContext();
@@ -14,7 +12,6 @@ import TrackManager from '@/components/TrackManager';
 
 export default {
   components: {
-    Controls,
     TrackManager
   },
   name: 'home',

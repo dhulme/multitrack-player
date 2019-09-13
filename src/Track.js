@@ -9,6 +9,13 @@ export default class Track {
     this.stereoPannerNode = stereoPannerNode;
     this.ready = false;
     this.gainNode = audioContext.createGain();
+    this.gainValue = 1;
+    this.active = true;
+
+    // store.watch((state) => state.masterGainValue, value => console.log('updating', value))
+    // store.watch(state =)
+
+    // store.watch((state, getters) => getters.getTrack(this), () => console.log('gain changed'))
 
     audioContext.decodeAudioData(arrayBuffer, audioBuffer => {
       this.audioBuffer = audioBuffer;
@@ -58,8 +65,10 @@ export default class Track {
     );
   }
 
-  setGainValue(value) {
-    this.gainNode.gain.value = value;
+  setGain(masterGainValue) {
+    this.gainNode.gain.value = this.active
+      ? masterGainValue + this.gainValue - 1
+      : 0;
   }
 
   eventLoop(playPosition) {
