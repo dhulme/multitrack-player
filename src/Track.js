@@ -3,11 +3,11 @@ import peaks from 'peaks.js';
 
 export default class Track {
   constructor({ arrayBuffer, audioContext }) {
-    this.active = false;
     this.id = id++;
     this.name = `Track ${id}`;
     this.audioContext = audioContext;
     this.ready = false;
+    this.gainNode = audioContext.createGain();
 
     audioContext.decodeAudioData(arrayBuffer, audioBuffer => {
       this.audioBuffer = audioBuffer;
@@ -19,7 +19,9 @@ export default class Track {
   initAudioSource() {
     this.audioSource = this.audioContext.createBufferSource();
     this.audioSource.buffer = this.audioBuffer;
-    this.audioSource.connect(this.audioContext.destination);
+    this.audioSource
+      .connect(this.gainNode)
+      .connect(this.audioContext.destination);
   }
 
   play(when, offset = 0) {
@@ -52,6 +54,10 @@ export default class Track {
         this.peaksOverview = this.peaks.views.getView('overview');
       }
     );
+  }
+
+  setGainValue(value) {
+    this.gainNode.gain.value = value;
   }
 
   eventLoop(playPosition) {

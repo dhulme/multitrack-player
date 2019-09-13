@@ -20,8 +20,7 @@ export default {
   name: 'home',
   data() {
     return {
-      publicPath: process.env.BASE_URL,
-      gain: 1
+      publicPath: process.env.BASE_URL
     };
   },
   mounted() {

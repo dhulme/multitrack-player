@@ -24,6 +24,9 @@ const store = new Vuex.Store({
     addTrack(state, track) {
       state.tracks.push(track);
     },
+    removeTrack(state, track) {
+      state.tracks.splice(state.tracks.indexOf(track), 1);
+    },
     setClickActive(state, value) {
       state.clickActive = value;
     },
@@ -65,6 +68,9 @@ const store = new Vuex.Store({
         audioContext
       });
       commit('addTrack', track);
+    },
+    removeTrack({ commit }, track) {
+      commit('removeTrack', track);
     },
     toggleClickActive({ commit, state }) {
       commit('setClickActive', !state.clickActive);
