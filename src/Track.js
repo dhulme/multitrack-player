@@ -8,7 +8,6 @@ export default class Track {
     this.name = `Track ${id}`;
     this.audioContext = audioContext;
     this.ready = false;
-    this.startedTime = null;
 
     audioContext.decodeAudioData(arrayBuffer, audioBuffer => {
       this.audioBuffer = audioBuffer;
@@ -23,20 +22,18 @@ export default class Track {
     this.audioSource.connect(this.audioContext.destination);
   }
 
-  play(when) {
-    this.audioSource.start(when);
-    this.startedTime = when;
+  play(when, offset = 0) {
+    this.audioSource.start(when, offset);
+  }
+
+  pause(when) {
+    this.audioSource.stop(when);
+    this.initAudioSource();
   }
 
   stop(when) {
     this.audioSource.stop(when);
-    this.setPeaksPlayheadTime(0);
-    this.startedTime = null;
     this.initAudioSource();
-  }
-
-  calculatePlayheadTime() {
-    return this.audioContext.currentTime - this.startedTime;
   }
 
   setPeaksPlayheadTime(playheadTime) {
@@ -57,9 +54,9 @@ export default class Track {
     );
   }
 
-  eventLoop() {
-    if (this.peaksOverview && this.startedTime !== null) {
-      this.setPeaksPlayheadTime(this.calculatePlayheadTime());
+  eventLoop(playPosition) {
+    if (this.peaksOverview) {
+      this.setPeaksPlayheadTime(playPosition);
     }
   }
 }

@@ -9,6 +9,7 @@ const audioContext = new AudioContext();
 const store = new Vuex.Store({
   state: {
     playState: 'stopped',
+    playPosition: 0,
     tracks: [],
     clickActive: false,
     clickBpm: '72'
@@ -25,6 +26,9 @@ const store = new Vuex.Store({
     },
     setClickActive(state, value) {
       state.clickActive = value;
+    },
+    setPlayPosition(state, value) {
+      state.playPosition = value;
     }
   },
   actions: {
@@ -39,10 +43,18 @@ const store = new Vuex.Store({
       if (audioContext.state === 'suspended') {
         audioContext.resume();
       }
-      state.tracks.forEach(track => track.play(audioContext.currentTime));
+
+      if (newState === 'playing') {
+        state.tracks.forEach(track =>
+          track.play(audioContext.currentTime, state.playPosition)
+        );
+      } else {
+        state.tracks.forEach(track => track.pause());
+      }
     },
     stop({ commit, state }) {
       commit('setPlayState', 'stopped');
+      commit('setPlayPosition', 0);
       state.tracks.forEach(track => track.stop());
     },
     addTrack({ commit }, arrayBuffer) {
@@ -59,7 +71,7 @@ const store = new Vuex.Store({
 });
 
 let eventLoopCount = 0;
-const eventLoopInterval = 500;
+const eventLoopInterval = 100;
 const eventLoopStart = performance.now();
 function frame() {
   const delta = performance.now() - eventLoopStart;
@@ -72,7 +84,15 @@ function frame() {
 requestAnimationFrame(frame);
 
 function eventLoop() {
-  store.state.tracks.forEach(track => track.eventLoop());
+  if (store.state.playState === 'playing') {
+    store.commit(
+      'setPlayPosition',
+      store.state.playPosition + eventLoopInterval / 1000
+    );
+  }
+  store.state.tracks.forEach(track =>
+    track.eventLoop(store.state.playPosition)
+  );
 }
 
 export default store;
