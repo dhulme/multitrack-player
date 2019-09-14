@@ -15,12 +15,7 @@
       ><VIcon>{{ mdiMetronome }}</VIcon></VBtn
     >
 
-    <VTextField
-      class="click-bpm"
-      single-line
-      hide-details
-      :value="$store.state.clickBpm"
-    />
+    <VTextField class="click-bpm" single-line hide-details v-model="clickBpm" />
     <VBtn text icon @click="$store.dispatch('toggleSettingsDialog')">
       <VIcon>{{ mdiWrench }}</VIcon>
     </VBtn>
@@ -66,6 +61,14 @@ export default {
       },
       set(value) {
         this.$store.dispatch('setMasterGainValue', value);
+      }
+    },
+    clickBpm: {
+      get() {
+        return this.$store.state.clickBpm;
+      },
+      set(value) {
+        this.$store.dispatch('setClickBpm', value);
       }
     }
   }

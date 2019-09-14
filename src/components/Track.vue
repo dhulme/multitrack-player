@@ -1,8 +1,8 @@
 <template>
   <VCard class="mb-4">
     <VCardText>
-      <VRow>
-        <VCol cols="3">
+      <VRow no-gutters>
+        <VCol cols="3" class="pr-4">
           <VTextField v-model="track.name" />
           <VRow dense justify="space-between">
             <VBtn
