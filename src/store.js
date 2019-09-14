@@ -19,7 +19,8 @@ const store = new Vuex.Store({
     clickActive: false,
     clickBpm: '72',
     masterGainValue: 1,
-    soloTrack: null
+    soloTrack: null,
+    dialog: null
   },
   getters: {
     getTrack(state) {
@@ -56,6 +57,9 @@ const store = new Vuex.Store({
     },
     setSoloTrack(state, track) {
       state.soloTrack = track;
+    },
+    setDialog(state, dialog) {
+      state.dialog = dialog;
     }
   },
   actions: {
@@ -116,6 +120,9 @@ const store = new Vuex.Store({
     setSoloTrack({ commit, state }, track) {
       commit('setSoloTrack', track);
       state.tracks.forEach(setTrackGain);
+    },
+    toggleSettingsDialog({ commit, state }) {
+      commit('setDialog', state.dialog === 'settings' ? null : 'settings');
     }
   }
 });

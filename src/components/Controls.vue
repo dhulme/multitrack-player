@@ -14,13 +14,16 @@
       @click="$store.dispatch('toggleClickActive')"
       ><VIcon>{{ mdiMetronome }}</VIcon></VBtn
     >
+
     <VTextField
       class="click-bpm"
       single-line
       hide-details
       :value="$store.state.clickBpm"
     />
-
+    <VBtn text icon @click="$store.dispatch('toggleSettingsDialog')">
+      <VIcon>{{ mdiWrench }}</VIcon>
+    </VBtn>
     <Clock />
 
     <VSlider
@@ -36,7 +39,7 @@
 
 <script>
 import Clock from './Clock';
-import { mdiMetronome, mdiStop } from '@mdi/js';
+import { mdiMetronome, mdiStop, mdiWrench } from '@mdi/js';
 
 export default {
   components: {
@@ -45,7 +48,8 @@ export default {
   data() {
     return {
       mdiStop,
-      mdiMetronome
+      mdiMetronome,
+      mdiWrench
     };
   },
   computed: {

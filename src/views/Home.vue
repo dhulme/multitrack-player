@@ -1,18 +1,21 @@
 <template>
   <VContainer>
+    <SettingsDialog />
     <TrackManager />
   </VContainer>
 </template>
 
 <script>
 import TrackManager from '@/components/TrackManager';
+import SettingsDialog from '@/components/SettingsDialog';
 // @ is an alias to /src
 // const audioContext = new AudioContext();
 // const gainNode = audioContext.createGain();
 
 export default {
   components: {
-    TrackManager
+    TrackManager,
+    SettingsDialog
   },
   name: 'home',
   data() {
