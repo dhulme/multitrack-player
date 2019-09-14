@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "start": "serve"
+    "start": "vue-cli-service serve"
   },
   "dependencies": {
     "@mdi/js": "^4.4.95",

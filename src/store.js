@@ -18,7 +18,8 @@ const store = new Vuex.Store({
     tracks: [],
     clickActive: false,
     clickBpm: '72',
-    masterGainValue: 1
+    masterGainValue: 1,
+    soloTrack: null
   },
   getters: {
     getTrack(state) {
@@ -52,6 +53,9 @@ const store = new Vuex.Store({
     },
     setTrackActive(state, { track, value }) {
       track.active = value;
+    },
+    setSoloTrack(state, track) {
+      state.soloTrack = track;
     }
   },
   actions: {
@@ -99,18 +103,26 @@ const store = new Vuex.Store({
     },
     setMasterGainValue({ commit, state }, value) {
       commit('setMasterGainValue', value);
-      state.tracks.forEach(track => track.setGain(value));
+      state.tracks.forEach(setTrackGain);
     },
-    setTrackGainValue({ commit, state }, { track, value }) {
+    setTrackGainValue({ commit }, { track, value }) {
       commit('setTrackGainValue', { track, value });
-      track.setGain(state.masterGainValue);
+      setTrackGain(track);
     },
-    setTrackActive({ commit, state }, { track, value }) {
+    setTrackActive({ commit }, { track, value }) {
       commit('setTrackActive', { track, value });
-      track.setGain(state.masterGainValue);
+      setTrackGain(track);
+    },
+    setSoloTrack({ commit, state }, track) {
+      commit('setSoloTrack', track);
+      state.tracks.forEach(setTrackGain);
     }
   }
 });
+
+function setTrackGain(track) {
+  track.setGain(store.state.masterGainValue, store.state.soloTrack);
+}
 
 let eventLoopCount = 0;
 const eventLoopInterval = 100;

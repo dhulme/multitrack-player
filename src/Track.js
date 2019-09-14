@@ -12,11 +12,6 @@ export default class Track {
     this.gainValue = 1;
     this.active = true;
 
-    // store.watch((state) => state.masterGainValue, value => console.log('updating', value))
-    // store.watch(state =)
-
-    // store.watch((state, getters) => getters.getTrack(this), () => console.log('gain changed'))
-
     audioContext.decodeAudioData(arrayBuffer, audioBuffer => {
       this.audioBuffer = audioBuffer;
       this.initAudioSource();
@@ -65,8 +60,18 @@ export default class Track {
     );
   }
 
-  setGain(masterGainValue) {
-    this.gainNode.gain.value = this.active
+  isSoloOrActive(soloTrack) {
+    if (soloTrack === this) {
+      return true;
+    } else if (soloTrack !== null) {
+      return false;
+    } else {
+      return this.active;
+    }
+  }
+
+  setGain(masterGainValue, soloTrack) {
+    this.gainNode.gain.value = this.isSoloOrActive(soloTrack)
       ? masterGainValue + this.gainValue - 1
       : 0;
   }

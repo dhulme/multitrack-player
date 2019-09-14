@@ -7,11 +7,11 @@
           <VRow dense justify="space-between">
             <VBtn
               :outlined="!track.active"
-              color="primary"
+              :color="activeColor"
               @click="toggleActive"
               >{{ number }}</VBtn
             >
-            <VBtn :outlined="false" color="tertiary" @click="toggleActive"
+            <VBtn :outlined="!solo" color="primary" @click="toggleSolo"
               >Solo</VBtn
             >
             <VBtn icon @click="remove">
@@ -58,6 +58,15 @@ export default {
           value
         });
       }
+    },
+    solo() {
+      return this.$store.state.soloTrack === this.track;
+    },
+    activeColor() {
+      const soloTrack = this.$store.state.soloTrack;
+      return soloTrack === this.track || soloTrack === null
+        ? 'primary'
+        : 'accent';
     }
   },
   watch: {
@@ -83,6 +92,9 @@ export default {
         track: this.track,
         value: !this.track.active
       });
+    },
+    toggleSolo() {
+      this.$store.dispatch('setSoloTrack', this.solo ? null : this.track);
     }
   }
 };
