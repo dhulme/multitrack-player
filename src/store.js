@@ -159,6 +159,9 @@ const store = new Vuex.Store({
     toggleSettingsDialog({ commit, state }) {
       commit('setDialog', state.dialog === 'settings' ? null : 'settings');
     },
+    toggleAboutDialog({ commit, state }) {
+      commit('setDialog', state.dialog === 'about' ? null : 'about');
+    },
     setTrackPanning({ commit }, value) {
       commit('setTrackPanning', value);
       trackStereoPannerNode.pan.value = value;
@@ -230,12 +233,14 @@ function clickEventLoop() {
     if (store.state.clickCount === 4) {
       store.commit('setClickCount', 0);
     }
+    const bufferSource = clickAudioContext.createBufferSource();
+    bufferSource
+      .connect(clickStereoPannerNode)
+      .connect(clickAudioContext.destination);
     if (store.state.clickCount === 0) {
-      const bufferSource = clickAudioContext.createBufferSource();
       bufferSource.buffer = clickUpAudioBuffer;
       bufferSource.start();
     } else {
-      const bufferSource = clickAudioContext.createBufferSource();
       bufferSource.buffer = clickAudioBuffer;
       bufferSource.start();
     }

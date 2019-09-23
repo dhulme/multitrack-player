@@ -1,6 +1,7 @@
 <template>
   <VContainer>
     <SettingsDialog />
+    <AboutDialog />
     <TrackManager />
   </VContainer>
 </template>
@@ -8,38 +9,19 @@
 <script>
 import TrackManager from '@/components/TrackManager';
 import SettingsDialog from '@/components/SettingsDialog';
-// @ is an alias to /src
-// const audioContext = new AudioContext();
-// const gainNode = audioContext.createGain();
+import AboutDialog from '@/components/AboutDialog';
 
 export default {
   components: {
     TrackManager,
-    SettingsDialog
+    SettingsDialog,
+    AboutDialog
   },
   name: 'home',
   data() {
     return {
       publicPath: process.env.BASE_URL
     };
-  },
-  mounted() {
-    // console.log(this.$refs.audio);
-    // const track = audioContext.createMediaElementSource(this.$refs.audio);
-    // track.connect(gainNode).connect(audioContext.destination);
-  },
-  methods: {
-    playPause() {
-      // if (audioContext.state === 'suspended') {
-      //   audioContext.resume();
-      // }
-      this.$refs.audio.play();
-    }
-  },
-  watch: {
-    gain() {
-      // gainNode.gain.value = value;
-    }
   }
 };
 </script>

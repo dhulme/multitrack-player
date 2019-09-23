@@ -6,7 +6,6 @@
         <v-toolbar-title class="headline">
           Multitrack Player
         </v-toolbar-title>
-        <VSpacer />
         <Controls />
       </VAppBar>
 

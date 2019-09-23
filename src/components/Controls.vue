@@ -19,6 +19,7 @@
     <VBtn text icon @click="$store.dispatch('toggleSettingsDialog')">
       <VIcon>{{ mdiWrench }}</VIcon>
     </VBtn>
+
     <Clock />
 
     <VSlider
@@ -29,6 +30,10 @@
       max="1.25"
       step="0.01"
     />
+
+    <VBtn text icon @click="$store.dispatch('toggleAboutDialog')">
+      <VIcon>{{ mdiWrench }}</VIcon>
+    </VBtn>
   </VRow>
 </template>
 

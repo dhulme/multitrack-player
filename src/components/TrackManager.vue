@@ -1,6 +1,12 @@
 <template>
   <div>
-    <VFileInput label="Track" @change="addTrack" :value="files" multiple />
+    <VFileInput
+      label="Tracks"
+      @change="addTracks"
+      :value="files"
+      multiple
+      placeholder="Add audio files"
+    />
     <Track
       v-for="(track, index) in $store.state.tracks"
       :track="track"
@@ -23,7 +29,7 @@ export default {
     };
   },
   methods: {
-    addTrack(files) {
+    addTracks(files) {
       if (!files.length) {
         return;
       }

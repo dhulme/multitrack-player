@@ -1,11 +1,11 @@
 {
-  "name": "multitrack-player",
+	"name": "multitrack-player",
+	"author": {"name": "David Hulme", "url": "http://dhulme.co.uk"},
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
     "start": "vue-cli-service serve"
   },
   "dependencies": {
