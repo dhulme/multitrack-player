@@ -1,17 +1,20 @@
 <template>
-  <VApp>
-    <VAppBar app>
-      <v-toolbar-title class="headline">
-        Multitrack Player
-      </v-toolbar-title>
-      <VSpacer />
-      <Controls />
-    </VAppBar>
+  <div>
+    <VProgressLinear v-if="$store.state.loading" indeterminate />
+    <VApp v-else>
+      <VAppBar app>
+        <v-toolbar-title class="headline">
+          Multitrack Player
+        </v-toolbar-title>
+        <VSpacer />
+        <Controls />
+      </VAppBar>
 
-    <v-content>
-      <router-view />
-    </v-content>
-  </VApp>
+      <v-content>
+        <router-view />
+      </v-content>
+    </VApp>
+  </div>
 </template>
 
 <script>

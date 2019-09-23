@@ -13,8 +13,8 @@ const clickAudioContext = new AudioContext();
 const clickStereoPannerNode = new StereoPannerNode(clickAudioContext, {
   pan: 0
 });
-const metronomeSound = new Audio('./metronome.wav');
-const metronomeUpSound = new Audio('./metronome-up.wav');
+let clickAudioBuffer = null;
+let clickUpAudioBuffer = null;
 
 let eventLoopStart = performance.now();
 let trackEventLoopCount = 0;
@@ -32,7 +32,8 @@ const store = new Vuex.Store({
     dialog: null,
     trackPanning: 0,
     clickPanning: 0,
-    clickCount: 0
+    clickCount: 0,
+    loading: true
   },
   getters: {
     getTrack(state) {
@@ -84,6 +85,9 @@ const store = new Vuex.Store({
     },
     setClickBpm(state, value) {
       state.clickBpm = value;
+    },
+    setLoading(state, value) {
+      state.loading = value;
     }
   },
   actions: {
@@ -169,6 +173,25 @@ const store = new Vuex.Store({
   }
 });
 
+// Fetch metronome audio files
+(async () => {
+  const metronome = await fetch('./metronome.wav');
+  const metronomeArrayBuffer = await metronome.arrayBuffer();
+
+  const metronomeUp = await fetch('./metronome-up.wav');
+  const metronomeUpArrayBuffer = await metronomeUp.arrayBuffer();
+
+  clickAudioContext.decodeAudioData(metronomeArrayBuffer, audioBuffer => {
+    clickAudioBuffer = audioBuffer;
+
+    clickAudioContext.decodeAudioData(metronomeUpArrayBuffer, audioBuffer => {
+      clickUpAudioBuffer = audioBuffer;
+
+      store.commit('setLoading', false);
+    });
+  });
+})();
+
 function setTrackGain(track) {
   track.setGain(store.state.masterGainValue, store.state.soloTrack);
 }
@@ -208,9 +231,13 @@ function clickEventLoop() {
       store.commit('setClickCount', 0);
     }
     if (store.state.clickCount === 0) {
-      metronomeUpSound.play();
+      const bufferSource = clickAudioContext.createBufferSource();
+      bufferSource.buffer = clickUpAudioBuffer;
+      bufferSource.start();
     } else {
-      metronomeSound.play();
+      const bufferSource = clickAudioContext.createBufferSource();
+      bufferSource.buffer = clickAudioBuffer;
+      bufferSource.start();
     }
     store.commit('setClickCount', store.state.clickCount + 1);
   }
