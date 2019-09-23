@@ -5,10 +5,10 @@ A multitrack audio file player for the browser.
 Built using Vue, the Vuetify UI framework and peaks.js audio waveform library.
 
 ## Current features
-🎚️ Unlimited number of audio tracks
-🕰️ Metronome/click
-🎛️ Customizable panning of click/tracks
-🔇 Solo/mute for all tracks
+🎚️ Unlimited number of audio tracks  
+🕰️ Metronome/click  
+🎛️ Customizable panning of click/tracks  
+🔇 Solo/mute for all tracks  
 🔊 Individual track and master gain control
 
 ## Known issues
