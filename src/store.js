@@ -191,7 +191,7 @@ setInterval(() => {
       trackEventLoopCount++;
     }
 
-    clickEventLoop();
+    clickEventLoop(store);
   }
 }, 1);
 

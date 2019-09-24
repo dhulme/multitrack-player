@@ -16,10 +16,10 @@
           />
 
           <VSlider
-            hide-details
+            label="Click volume"
             v-model="clickGain"
             min="0"
-            max="1.25"
+            max="2"
             step="0.01"
           />
         </VForm>
