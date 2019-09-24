@@ -16,9 +16,6 @@
     >
 
     <VTextField class="click-bpm" single-line hide-details v-model="clickBpm" />
-    <VBtn text icon @click="$store.dispatch('toggleSettingsDialog')">
-      <VIcon>{{ mdiWrench }}</VIcon>
-    </VBtn>
 
     <Clock />
 
@@ -31,15 +28,18 @@
       step="0.01"
     />
 
-    <VBtn text icon @click="$store.dispatch('toggleAboutDialog')">
+    <VBtn text icon @click="$store.dispatch('toggleSettingsDialog')">
       <VIcon>{{ mdiWrench }}</VIcon>
+    </VBtn>
+    <VBtn text icon @click="$store.dispatch('toggleAboutDialog')">
+      <VIcon>{{ mdiInformation }}</VIcon>
     </VBtn>
   </VRow>
 </template>
 
 <script>
 import Clock from './Clock';
-import { mdiMetronome, mdiStop, mdiWrench } from '@mdi/js';
+import { mdiMetronome, mdiStop, mdiWrench, mdiInformation } from '@mdi/js';
 
 export default {
   components: {
@@ -49,7 +49,8 @@ export default {
     return {
       mdiStop,
       mdiMetronome,
-      mdiWrench
+      mdiWrench,
+      mdiInformation
     };
   },
   computed: {

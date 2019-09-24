@@ -16,7 +16,7 @@ const clickStereoPannerNode = new StereoPannerNode(clickAudioContext, {
 let clickAudioBuffer = null;
 let clickUpAudioBuffer = null;
 
-let eventLoopStart = performance.now();
+let eventLoopStart = trackAudioContext.currentTime;
 let trackEventLoopCount = 0;
 let clickEventLoopCount = 0;
 
@@ -32,7 +32,6 @@ const store = new Vuex.Store({
     dialog: null,
     trackPanning: 0,
     clickPanning: 0,
-    clickCount: 0,
     loading: true
   },
   getters: {
@@ -80,9 +79,6 @@ const store = new Vuex.Store({
     setClickPanning(state, value) {
       state.clickPanning = value;
     },
-    setClickCount(state, value) {
-      state.clickCount = value;
-    },
     setClickBpm(state, value) {
       state.clickBpm = value;
     },
@@ -92,10 +88,6 @@ const store = new Vuex.Store({
   },
   actions: {
     playPause({ state, commit }) {
-      if (state.playState === 'stopped') {
-        eventLoopStart = performance.now();
-      }
-
       const states = {
         stopped: 'playing',
         paused: 'playing',
@@ -107,6 +99,8 @@ const store = new Vuex.Store({
         trackAudioContext.resume();
       }
       if (newState === 'playing') {
+        eventLoopStart = trackAudioContext.currentTime;
+        trackEventLoopCount = 0;
         state.tracks.forEach(track =>
           track.play(trackAudioContext.currentTime, state.playPosition)
         );
@@ -120,8 +114,6 @@ const store = new Vuex.Store({
       }
       commit('setPlayState', 'stopped');
       commit('setPlayPosition', 0);
-      commit('setClickCount', 0);
-      trackEventLoopCount = 0;
       clickEventLoopCount = 0;
       state.tracks.forEach(track => track.eventLoop(store.state.playPosition));
     },
@@ -199,53 +191,44 @@ function setTrackGain(track) {
   track.setGain(store.state.masterGainValue, store.state.soloTrack);
 }
 
-const trackEventLoopInterval = 100;
+const trackEventLoopInterval = 0.01;
 
-function frame() {
+setInterval(() => {
   if (store.state.playState === 'playing') {
-    const delta = performance.now() - eventLoopStart;
-    if (delta / trackEventLoopCount > trackEventLoopInterval) {
+    const trackDelta = trackAudioContext.currentTime - eventLoopStart;
+    if (trackDelta / trackEventLoopCount > trackEventLoopInterval) {
       trackEventLoop();
       trackEventLoopCount++;
     }
-    const clickInterval = (60 * 1000) / (store.state.clickBpm / 1);
-    if (delta / clickEventLoopCount > clickInterval) {
-      clickEventLoop();
+
+    const clickInterval = 60 / (store.state.clickBpm / 1);
+    if (store.state.playPosition / clickEventLoopCount > clickInterval) {
+      const bufferSource = clickAudioContext.createBufferSource();
+      bufferSource
+        .connect(clickStereoPannerNode)
+        .connect(clickAudioContext.destination);
+
+      if (clickEventLoopCount % 4 === 0) {
+        bufferSource.buffer = clickUpAudioBuffer;
+        bufferSource.start();
+      } else {
+        bufferSource.buffer = clickAudioBuffer;
+        bufferSource.start();
+      }
+
       clickEventLoopCount++;
     }
   }
-  requestAnimationFrame(frame);
-}
-requestAnimationFrame(frame);
+}, 1);
 
 function trackEventLoop() {
   store.commit(
     'setPlayPosition',
-    store.state.playPosition + trackEventLoopInterval / 1000
+    store.state.playPosition + trackEventLoopInterval
   );
   store.state.tracks.forEach(track =>
     track.eventLoop(store.state.playPosition)
   );
-}
-
-function clickEventLoop() {
-  if (store.state.playState === 'playing') {
-    if (store.state.clickCount === 4) {
-      store.commit('setClickCount', 0);
-    }
-    const bufferSource = clickAudioContext.createBufferSource();
-    bufferSource
-      .connect(clickStereoPannerNode)
-      .connect(clickAudioContext.destination);
-    if (store.state.clickCount === 0) {
-      bufferSource.buffer = clickUpAudioBuffer;
-      bufferSource.start();
-    } else {
-      bufferSource.buffer = clickAudioBuffer;
-      bufferSource.start();
-    }
-    store.commit('setClickCount', store.state.clickCount + 1);
-  }
 }
 
 export default store;
