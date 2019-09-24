@@ -2,8 +2,8 @@
   <div>
     <VProgressLinear v-if="$store.state.loading" indeterminate />
     <VApp v-else>
-      <VAppBar app>
-        <v-toolbar-title class="headline">
+      <VAppBar height="auto" class="app-bar">
+        <v-toolbar-title class="headline d-none d-md-flex">
           Multitrack Player
         </v-toolbar-title>
         <Controls />
@@ -25,3 +25,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.app-bar {
+  flex-grow: 0;
+}
+</style>
