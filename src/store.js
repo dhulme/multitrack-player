@@ -1,6 +1,13 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import Track from './Track';
+import {
+  clickEventLoop,
+  setClickPan,
+  initClick,
+  resetClickEventLoopCount,
+  setClickGain
+} from './click';
 
 Vue.use(Vuex);
 
@@ -9,16 +16,8 @@ const trackStereoPannerNode = new StereoPannerNode(trackAudioContext, {
   pan: 0
 });
 
-const clickAudioContext = new AudioContext();
-const clickStereoPannerNode = new StereoPannerNode(clickAudioContext, {
-  pan: 0
-});
-let clickAudioBuffer = null;
-let clickUpAudioBuffer = null;
-
 let eventLoopStart = trackAudioContext.currentTime;
 let trackEventLoopCount = 0;
-let clickEventLoopCount = 0;
 
 const store = new Vuex.Store({
   state: {
@@ -27,6 +26,7 @@ const store = new Vuex.Store({
     tracks: [],
     clickActive: false,
     clickBpm: 102,
+    clickGainValue: 1,
     masterGainValue: 1,
     soloTrack: null,
     dialog: null,
@@ -60,6 +60,9 @@ const store = new Vuex.Store({
     },
     setMasterGainValue(state, value) {
       state.masterGainValue = value;
+    },
+    setClickGainValue(state, value) {
+      state.clickGainValue = value;
     },
     setTrackGainValue(state, { track, value }) {
       track.gainValue = value;
@@ -114,7 +117,7 @@ const store = new Vuex.Store({
       }
       commit('setPlayState', 'stopped');
       commit('setPlayPosition', 0);
-      clickEventLoopCount = 0;
+      resetClickEventLoopCount();
       state.tracks.forEach(track => track.eventLoop(store.state.playPosition));
     },
     addTrack({ commit }, arrayBuffer) {
@@ -160,32 +163,19 @@ const store = new Vuex.Store({
     },
     setClickPanning({ commit }, value) {
       commit('setClickPanning', value);
-      clickStereoPannerNode.pan.value = value;
+      setClickPan(value);
     },
     setClickBpm({ commit }, value) {
       commit('setClickBpm', value);
+    },
+    setClickGainValue({ commit }, value) {
+      commit('setClickGainValue', value);
+      setClickGain(value);
     }
   }
 });
 
-// Fetch metronome audio files
-(async () => {
-  const metronome = await fetch('./metronome.wav');
-  const metronomeArrayBuffer = await metronome.arrayBuffer();
-
-  const metronomeUp = await fetch('./metronome-up.wav');
-  const metronomeUpArrayBuffer = await metronomeUp.arrayBuffer();
-
-  clickAudioContext.decodeAudioData(metronomeArrayBuffer, audioBuffer => {
-    clickAudioBuffer = audioBuffer;
-
-    clickAudioContext.decodeAudioData(metronomeUpArrayBuffer, audioBuffer => {
-      clickUpAudioBuffer = audioBuffer;
-
-      store.commit('setLoading', false);
-    });
-  });
-})();
+initClick(store);
 
 function setTrackGain(track) {
   track.setGain(store.state.masterGainValue, store.state.soloTrack);
@@ -201,23 +191,7 @@ setInterval(() => {
       trackEventLoopCount++;
     }
 
-    const clickInterval = 60 / (store.state.clickBpm / 1);
-    if (store.state.playPosition / clickEventLoopCount > clickInterval) {
-      const bufferSource = clickAudioContext.createBufferSource();
-      bufferSource
-        .connect(clickStereoPannerNode)
-        .connect(clickAudioContext.destination);
-
-      if (clickEventLoopCount % 4 === 0) {
-        bufferSource.buffer = clickUpAudioBuffer;
-        bufferSource.start();
-      } else {
-        bufferSource.buffer = clickAudioBuffer;
-        bufferSource.start();
-      }
-
-      clickEventLoopCount++;
-    }
+    clickEventLoop();
   }
 }, 1);
 

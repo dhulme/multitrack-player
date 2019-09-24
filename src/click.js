@@ -1,0 +1,63 @@
+const audioContext = new AudioContext();
+
+const stereoPannerNode = new StereoPannerNode(audioContext, {
+  pan: 0
+});
+const gainNode = audioContext.createGain();
+
+let audioBuffer = null;
+let upAudioBuffer = null;
+
+let eventLoopCount = 0;
+
+// Fetch click audio files
+export async function initClick(store) {
+  const click = await fetch('./metronome.wav');
+  const clickArrayBuffer = await click.arrayBuffer();
+
+  const clickUp = await fetch('./metronome-up.wav');
+  const clickUpArrayBuffer = await clickUp.arrayBuffer();
+
+  audioContext.decodeAudioData(clickArrayBuffer, _ => {
+    audioBuffer = _;
+
+    audioContext.decodeAudioData(clickUpArrayBuffer, _ => {
+      upAudioBuffer = _;
+
+      store.commit('setLoading', false);
+    });
+  });
+}
+
+export function clickEventLoop(store) {
+  const clickInterval = 60 / (store.state.clickBpm / 1);
+  if (store.state.playPosition / eventLoopCount > clickInterval) {
+    const bufferSource = audioContext.createBufferSource();
+    bufferSource
+      .connect(gainNode)
+      .connect(stereoPannerNode)
+      .connect(audioContext.destination);
+
+    if (eventLoopCount % 4 === 0) {
+      bufferSource.buffer = upAudioBuffer;
+      bufferSource.start();
+    } else {
+      bufferSource.buffer = audioBuffer;
+      bufferSource.start();
+    }
+
+    eventLoopCount++;
+  }
+}
+
+export function setClickPan(value) {
+  stereoPannerNode.pan.value = value;
+}
+
+export function resetClickEventLoopCount() {
+  eventLoopCount = 0;
+}
+
+export function setClickGain(value) {
+  gainNode.gain.value = value;
+}

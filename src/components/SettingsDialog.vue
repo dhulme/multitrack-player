@@ -14,6 +14,14 @@
             v-model="clickPanning"
             label="Click output"
           />
+
+          <VSlider
+            hide-details
+            v-model="clickGain"
+            min="0"
+            max="1.25"
+            step="0.01"
+          />
         </VForm>
       </VCardText>
       <VCardActions>
@@ -58,6 +66,14 @@ export default {
       },
       set(value) {
         return this.$store.dispatch('setClickPanning', value);
+      }
+    },
+    clickGain: {
+      get() {
+        return this.$store.state.clickGainValue;
+      },
+      set(value) {
+        this.$store.dispatch('setClickGainValue', value);
       }
     }
   }
