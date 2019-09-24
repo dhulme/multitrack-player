@@ -13,6 +13,8 @@ Built using Vue, the Vuetify UI framework and peaks.js audio waveform library.
 🔇 Solo/mute for all tracks  
 🔊 Individual track and master gain control
 
+![Screenshot](./screenshot.png)
+
 ## Known issues
 - Not fully responsive on smaller displays
 - Project icon needs updating
