@@ -21,8 +21,23 @@ Built using Vue, the Vuetify UI framework and peaks.js audio waveform library.
 - Track pitch + tempo control
 - Track grouping
 
+### Proposed project file format
+```js
+{
+	"name": String,
+	"author": String,
+	"songs": ????,
+	"files": [{
+		"name": String,
+		"size": Number
+	}]
+}
+```
+
 ## Local development setup
+
 ### Compiles and hot-reloads for development
 `npm start` or `npm run server`
+
 ### Compiles and minifies for production
 `npm run build`

@@ -12,10 +12,10 @@ let eventLoopCount = 0;
 
 // Fetch click audio files
 export async function initClick(store) {
-  const click = await fetch('./metronome.wav');
+  const click = await fetch('./click.wav');
   const clickArrayBuffer = await click.arrayBuffer();
 
-  const clickUp = await fetch('./metronome-up.wav');
+  const clickUp = await fetch('./click-accent.wav');
   const clickUpArrayBuffer = await clickUp.arrayBuffer();
 
   audioContext.decodeAudioData(clickArrayBuffer, _ => {
