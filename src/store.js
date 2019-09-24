@@ -32,7 +32,11 @@ const store = new Vuex.Store({
     dialog: null,
     trackPanning: 0,
     clickPanning: 0,
-    loading: true
+    loading: true,
+    clickTimeSignature: {
+      beats: 4,
+      unit: 4
+    }
   },
   getters: {
     getTrack(state) {
@@ -87,6 +91,9 @@ const store = new Vuex.Store({
     },
     setLoading(state, value) {
       state.loading = value;
+    },
+    setClickTimeSignature(state, value) {
+      state.clickTimeSignature = value;
     }
   },
   actions: {
@@ -171,6 +178,9 @@ const store = new Vuex.Store({
     setClickGainValue({ commit }, value) {
       commit('setClickGainValue', value);
       setClickGain(value);
+    },
+    setClickTimeSignature({ commit }, value) {
+      commit('setClickTimeSignature', value);
     }
   }
 });

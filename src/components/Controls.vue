@@ -15,7 +15,18 @@
       ><VIcon>{{ mdiMetronome }}</VIcon></VBtn
     >
 
-    <VTextField class="click-bpm" single-line hide-details v-model="clickBpm" />
+    <VTextField
+      class="input-thin"
+      single-line
+      hide-details
+      v-model="clickBpm"
+    />
+    <VTextField
+      class="input-thin"
+      single-line
+      hide-details
+      v-model="clickTimeSignature"
+    />
 
     <Clock />
 
@@ -76,16 +87,30 @@ export default {
       set(value) {
         this.$store.dispatch('setClickBpm', value);
       }
+    },
+    clickTimeSignature: {
+      get() {
+        const { beats, unit } = this.$store.state.clickTimeSignature;
+        return `${beats}/${unit}`;
+      },
+      set(value) {
+        const [beats, unit] = value.split('/');
+        this.$store.dispatch('setClickTimeSignature', {
+          beats: Number(beats) || '',
+          unit: Number(unit) || ''
+        });
+      }
     }
   }
 };
 </script>
 
 <style lang="scss">
-.click-bpm {
+.input-thin {
   max-width: 4rem;
+  margin: 0 0.5rem;
 }
-.click-bpm input {
+.input-thin input {
   text-align: center;
 }
 </style>

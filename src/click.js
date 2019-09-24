@@ -30,7 +30,12 @@ export async function initClick(store) {
 }
 
 export function clickEventLoop(store) {
-  const clickInterval = 60 / (store.state.clickBpm / 1);
+  const { beats, unit } = store.state.clickTimeSignature;
+  if (!beats || !unit) {
+    return;
+  }
+
+  const clickInterval = 60 / (store.state.clickBpm / (unit / 4));
   if (store.state.playPosition / eventLoopCount > clickInterval) {
     const bufferSource = audioContext.createBufferSource();
     bufferSource
@@ -38,7 +43,7 @@ export function clickEventLoop(store) {
       .connect(stereoPannerNode)
       .connect(audioContext.destination);
 
-    if (eventLoopCount % 4 === 0) {
+    if (eventLoopCount % beats === 0) {
       bufferSource.buffer = upAudioBuffer;
       bufferSource.start();
     } else {
