@@ -16,6 +16,7 @@ Built using Vue, the Vuetify UI framework and peaks.js audio waveform library.
 ## Known issues
 - Not fully responsive on smaller displays
 - Project icon needs updating
+- High memory and usage and crashes with high numbers of tracks
 
 ## Possible future features
 - Local 'projects' concept, to save and load sessions
