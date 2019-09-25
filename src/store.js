@@ -40,6 +40,7 @@ const store = new Vuex.Store({
     },
     midiDevice: null,
     controlEditMode: null,
+    controlEditSelected: null,
     controlEditKeyMap: {},
     controlEditMidiMap: {}
   },
@@ -108,6 +109,9 @@ const store = new Vuex.Store({
     },
     setControlEditMode(state, value) {
       state.controlEditMode = value;
+    },
+    setControlEditSelected(state, value) {
+      state.controlEditSelected = value;
     }
   },
   actions: {
@@ -204,6 +208,9 @@ const store = new Vuex.Store({
     },
     setControlEditMode({ commit }, value) {
       commit('setControlEditMode', value);
+    },
+    setControlEditSelected({ commit }, value) {
+      commit('setControlEditSelected', value);
     }
   }
 });

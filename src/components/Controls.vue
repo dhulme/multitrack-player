@@ -1,9 +1,19 @@
 <template>
   <VRow justify="end" align="center">
-    <VBtn text icon @click="$store.dispatch('playPause')">
+    <VBtn
+      text
+      icon
+      @click="
+        mapControlOrAction('playPause', () => this.$store.dispatch('playPause'))
+      "
+    >
       <VIcon>{{ playPauseIcon }}</VIcon>
     </VBtn>
-    <VBtn text icon @click="$store.dispatch('stop')">
+    <VBtn
+      text
+      icon
+      @click="mapControlOrAction('stop', () => this.$store.dispatch('stop'))"
+    >
       <VIcon>{{ mdiStop }}</VIcon>
     </VBtn>
 
@@ -11,9 +21,14 @@
       text
       icon
       :outlined="$store.state.clickActive"
-      @click="$store.dispatch('toggleClickActive')"
-      ><VIcon>{{ mdiMetronome }}</VIcon></VBtn
+      @click="
+        mapControlOrAction('clickActive', () =>
+          this.$store.dispatch('toggleClickActive')
+        )
+      "
     >
+      <VIcon>{{ mdiMetronome }}</VIcon>
+    </VBtn>
 
     <TextField v-model="clickBpm" />
     <TextField v-model="clickTimeSignature" />
@@ -105,6 +120,15 @@ export default {
     },
     beatsValues() {
       return this.$store.getters.playBeatsPosition;
+    }
+  },
+  methods: {
+    mapControlOrAction(controlName, handler) {
+      if (!this.$store.state.controlEditMode) {
+        return handler();
+      }
+
+      this.$store.dispatch('setControlEditSelected', controlName);
     }
   }
 };

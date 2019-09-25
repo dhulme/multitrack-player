@@ -28,12 +28,23 @@
             label="MIDI Control Device"
             v-model="midiDevice"
           />
-          <VBtn @click="$store.dispatch('setControlEditMode', 'midi')"
-            >Edit MIDI map</VBtn
-          >
-          <VBtn @click="$store.dispatch('setControlEditMode', 'key')"
-            >Edit key map</VBtn
-          >
+
+          <VLabel>Edit MIDI and key mapping</VLabel>
+          <VRow class="mt-2 ml-1">
+            <VBtn
+              class="mr-4"
+              small
+              outlined
+              @click="$store.dispatch('setControlEditMode', 'midi')"
+              >MIDI</VBtn
+            >
+            <VBtn
+              small
+              outlined
+              @click="$store.dispatch('setControlEditMode', 'key')"
+              >Key</VBtn
+            >
+          </VRow>
         </VForm>
       </VCardText>
       <VCardActions>
