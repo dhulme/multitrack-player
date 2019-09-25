@@ -19,7 +19,8 @@
     "vue": "^2.6.10",
     "vue-router": "^3.0.3",
     "vuetify": "^2.0.0",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "webmidi": "^2.5.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.11.0",

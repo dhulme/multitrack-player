@@ -11,20 +11,22 @@ let upAudioBuffer = null;
 let eventLoopCount = 0;
 
 // Fetch click audio files
-export async function initClick(store) {
+export async function initClick() {
   const click = await fetch('./click.wav');
   const clickArrayBuffer = await click.arrayBuffer();
 
   const clickUp = await fetch('./click-accent.wav');
   const clickUpArrayBuffer = await clickUp.arrayBuffer();
 
-  audioContext.decodeAudioData(clickArrayBuffer, _ => {
-    audioBuffer = _;
+  return new Promise(res => {
+    audioContext.decodeAudioData(clickArrayBuffer, _ => {
+      audioBuffer = _;
 
-    audioContext.decodeAudioData(clickUpArrayBuffer, _ => {
-      upAudioBuffer = _;
+      audioContext.decodeAudioData(clickUpArrayBuffer, _ => {
+        upAudioBuffer = _;
 
-      store.commit('setLoading', false);
+        res();
+      });
     });
   });
 }

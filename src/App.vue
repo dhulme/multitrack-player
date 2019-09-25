@@ -19,9 +19,16 @@
 <script>
 import Controls from '@/components/Controls';
 
+import { initClick } from './click';
+import { initMidi } from './midi';
+
 export default {
   components: {
     Controls
+  },
+  async mounted() {
+    await Promise.all([initMidi(), initClick()]);
+    this.$store.commit('setLoading', false);
   }
 };
 </script>

@@ -4,11 +4,11 @@ import Track from './Track';
 import {
   clickEventLoop,
   setClickPan,
-  initClick,
   resetClickEventLoopCount,
   setClickGain,
   getClickBeats
 } from './click';
+import { onInputMessage } from './midi';
 
 Vue.use(Vuex);
 
@@ -37,7 +37,11 @@ const store = new Vuex.Store({
     clickTimeSignature: {
       beats: 4,
       unit: 4
-    }
+    },
+    midiDevice: null,
+    controlEditMode: null,
+    controlEditKeyMap: {},
+    controlEditMidiMap: {}
   },
   getters: {
     getTrack(state) {
@@ -98,6 +102,12 @@ const store = new Vuex.Store({
     },
     setClickTimeSignature(state, value) {
       state.clickTimeSignature = value;
+    },
+    setMidiDevice(state, value) {
+      state.midiDevice = value;
+    },
+    setControlEditMode(state, value) {
+      state.controlEditMode = value;
     }
   },
   actions: {
@@ -185,11 +195,18 @@ const store = new Vuex.Store({
     },
     setClickTimeSignature({ commit }, value) {
       commit('setClickTimeSignature', value);
+    },
+    setMidiDevice({ commit }, value) {
+      commit('setMidiDevice', value);
+      onInputMessage(value, () => {
+        // TODO
+      });
+    },
+    setControlEditMode({ commit }, value) {
+      commit('setControlEditMode', value);
     }
   }
 });
-
-initClick(store);
 
 function setTrackGain(track) {
   track.setGain(store.state.masterGainValue, store.state.soloTrack);

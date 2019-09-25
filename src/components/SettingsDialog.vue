@@ -22,6 +22,18 @@
             max="2"
             step="0.01"
           />
+
+          <VSelect
+            :items="midiDevices"
+            label="MIDI Control Device"
+            v-model="midiDevice"
+          />
+          <VBtn @click="$store.dispatch('setControlEditMode', 'midi')"
+            >Edit MIDI map</VBtn
+          >
+          <VBtn @click="$store.dispatch('setControlEditMode', 'key')"
+            >Edit key map</VBtn
+          >
         </VForm>
       </VCardText>
       <VCardActions>
@@ -33,6 +45,8 @@
 </template>
 
 <script>
+import { inputs } from '../midi';
+
 export default {
   data() {
     return {
@@ -40,7 +54,8 @@ export default {
         { text: '1/2 (Stereo)', value: 0 },
         { text: '1 (Mono)', value: -1 },
         { text: '2 (Mono)', value: 1 }
-      ]
+      ],
+      midiDevices: inputs()
     };
   },
   computed: {
@@ -74,6 +89,14 @@ export default {
       },
       set(value) {
         this.$store.dispatch('setClickGainValue', value);
+      }
+    },
+    midiDevice: {
+      get() {
+        return this.$store.state.midiDevice;
+      },
+      set(value) {
+        this.$store.dispatch('setMidiDevice', value);
       }
     }
   }
