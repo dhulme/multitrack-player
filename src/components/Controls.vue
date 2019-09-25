@@ -1,9 +1,9 @@
 <template>
   <VRow justify="end" align="center">
-    <VBtn text icon @click="mapControlOrAction('playPause', 'playPause')">
+    <VBtn text icon @click="mapControlOrAction('playPause')">
       <VIcon>{{ playPauseIcon }}</VIcon>
     </VBtn>
-    <VBtn text icon @click="mapControlOrAction('stop', 'stop')">
+    <VBtn text icon @click="mapControlOrAction('stop')">
       <VIcon>{{ mdiStop }}</VIcon>
     </VBtn>
 
@@ -111,7 +111,7 @@ export default {
   methods: {
     mapControlOrDispatchAction(controlName, actionName) {
       if (!this.$store.state.controlEditMode) {
-        return this.$store.dispatch(actionName);
+        return this.$store.dispatch(actionName || controlName);
       }
 
       this.$store.dispatch('setControlEditSelected', controlName);

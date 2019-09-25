@@ -20,8 +20,14 @@ export function getInput(name) {
   return webMidi.getInputByName(name);
 }
 
-export function onInputMessage(input, handler) {
+export function initMidiEvents(input, store) {
+  function eventHandler() {
+    if (store.state.controlEditMode === 'midi') {
+      store.dispatch('setControlEditMidi', event);
+    }
+  }
+
   input.removeListener();
-  input.addListener('noteon', 'all', handler);
-  input.addListener('controlchange', 'all', handler);
+  input.addListener('noteon', 'all', eventHandler);
+  input.addListener('controlchange', 'all', eventHandler);
 }

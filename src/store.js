@@ -8,7 +8,7 @@ import {
   setClickGain,
   getClickBeats
 } from './click';
-import { onInputMessage } from './midi';
+import { initMidiEvents } from './midi';
 
 Vue.use(Vuex);
 
@@ -112,6 +112,12 @@ const store = new Vuex.Store({
     },
     setControlEditSelected(state, value) {
       state.controlEditSelected = value;
+    },
+    setControlEditKey(state, key) {
+      state.controlEditKeyMap[state.controlEditSelected] = key;
+    },
+    setControlEditMidi(state, midi) {
+      state.controlEditMidiMap[state.controlEditSelected] = midi;
     }
   },
   actions: {
@@ -202,15 +208,19 @@ const store = new Vuex.Store({
     },
     setMidiDevice({ commit }, value) {
       commit('setMidiDevice', value);
-      onInputMessage(value, () => {
-        // TODO
-      });
+      initMidiEvents(value, store);
     },
     setControlEditMode({ commit }, value) {
       commit('setControlEditMode', value);
     },
     setControlEditSelected({ commit }, value) {
       commit('setControlEditSelected', value);
+    },
+    setControlEditKey({ commit }, key) {
+      commit('setControlEditKey', key);
+    },
+    setControlEditMidi({ commit }, midi) {
+      commit('setControlEditMidi', midi);
     }
   }
 });
