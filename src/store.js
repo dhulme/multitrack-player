@@ -38,11 +38,13 @@ const store = new Vuex.Store({
       beats: 4,
       unit: 4
     },
-    midiDevice: null,
+    midiDeviceName: null,
     controlEditMode: null,
     controlEditSelected: null,
-    controlEditKeyMap: {},
-    controlEditMidiMap: {}
+    /**
+     * { [actionName]: { type: 'note' | 'controlChange' | 'key', value: Number } }
+     */
+    controlEditMap: {}
   },
   getters: {
     getTrack(state) {
@@ -104,8 +106,8 @@ const store = new Vuex.Store({
     setClickTimeSignature(state, value) {
       state.clickTimeSignature = value;
     },
-    setMidiDevice(state, value) {
-      state.midiDevice = value;
+    setMidiDeviceName(state, value) {
+      state.midiDeviceName = value;
     },
     setControlEditMode(state, value) {
       state.controlEditMode = value;
@@ -113,11 +115,8 @@ const store = new Vuex.Store({
     setControlEditSelected(state, value) {
       state.controlEditSelected = value;
     },
-    setControlEditKey(state, key) {
-      state.controlEditKeyMap[state.controlEditSelected] = key;
-    },
-    setControlEditMidi(state, midi) {
-      state.controlEditMidiMap[state.controlEditSelected] = midi;
+    setControlEdit(state, value) {
+      state.controlEditMap[state.controlEditSelected] = value;
     }
   },
   actions: {
@@ -206,21 +205,30 @@ const store = new Vuex.Store({
     setClickTimeSignature({ commit }, value) {
       commit('setClickTimeSignature', value);
     },
-    setMidiDevice({ commit }, value) {
-      commit('setMidiDevice', value);
+    setMidiDeviceName({ commit }, value) {
+      commit('setMidiDeviceName', value);
       initMidiEvents(value, store);
     },
     setControlEditMode({ commit }, value) {
       commit('setControlEditMode', value);
+      commit('setDialog', null);
     },
     setControlEditSelected({ commit }, value) {
       commit('setControlEditSelected', value);
     },
-    setControlEditKey({ commit }, key) {
-      commit('setControlEditKey', key);
+    setControlEditMidi({ commit, dispatch }, midi) {
+      commit('setControlEdit', midi);
+      dispatch('setControlEditMode', null);
     },
-    setControlEditMidi({ commit }, midi) {
-      commit('setControlEditMidi', midi);
+    triggerControlAction({ state, dispatch }, eventValue) {
+      Object.entries(state.controlEditMap).find(([action, mapValue]) => {
+        if (
+          mapValue.type === eventValue.type &&
+          mapValue.number === eventValue.number
+        ) {
+          dispatch(action);
+        }
+      });
     }
   }
 });

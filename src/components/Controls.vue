@@ -1,17 +1,16 @@
 <template>
   <VRow justify="end" align="center">
-    <VBtn text icon @click="mapControlOrAction('playPause')">
+    <VBtn icon @click="mapControlOrDispatchAction('playPause')">
       <VIcon>{{ playPauseIcon }}</VIcon>
     </VBtn>
-    <VBtn text icon @click="mapControlOrAction('stop')">
+    <VBtn icon @click="mapControlOrDispatchAction('stop')">
       <VIcon>{{ mdiStop }}</VIcon>
     </VBtn>
 
     <VBtn
-      text
       icon
       :outlined="$store.state.clickActive"
-      @click="mapControlOrAction('clickActive', 'toggleClickActive')"
+      @click="mapControlOrDispatchAction('clickActive', 'toggleClickActive')"
     >
       <VIcon>{{ mdiMetronome }}</VIcon>
     </VBtn>

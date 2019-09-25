@@ -29,6 +29,11 @@ export default {
   async mounted() {
     await Promise.all([initMidi(), initClick()]);
     this.$store.commit('setLoading', false);
+  },
+  watch: {
+    '$store.state.controlEditMode'(value) {
+      this.$vuetify.theme.dark = !!value;
+    }
   }
 };
 </script>

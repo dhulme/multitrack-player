@@ -66,7 +66,7 @@ export default {
         { text: '1 (Mono)', value: -1 },
         { text: '2 (Mono)', value: 1 }
       ],
-      midiDevices: inputs()
+      midiDevices: inputs().map(input => input.name)
     };
   },
   computed: {
@@ -107,7 +107,7 @@ export default {
         return this.$store.state.midiDevice;
       },
       set(value) {
-        this.$store.dispatch('setMidiDevice', value);
+        this.$store.dispatch('setMidiDeviceName', value);
       }
     }
   }

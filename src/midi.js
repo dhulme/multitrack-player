@@ -20,14 +20,22 @@ export function getInput(name) {
   return webMidi.getInputByName(name);
 }
 
-export function initMidiEvents(input, store) {
-  function eventHandler() {
-    if (store.state.controlEditMode === 'midi') {
-      store.dispatch('setControlEditMidi', event);
-    }
-  }
+export function initMidiEvents(deviceName, store) {
+  const input = getInput(deviceName);
 
   input.removeListener();
-  input.addListener('noteon', 'all', eventHandler);
-  input.addListener('controlchange', 'all', eventHandler);
+  input.addListener('noteon', 'all', event => {
+    const value = event.note.number;
+    if (store.state.controlEditMode === 'midi') {
+      store.dispatch('setControlEditMidi', { type: 'note', value });
+    }
+  });
+  input.addListener('controlchange', 'all', event => {
+    const value = { type: 'controlChange', number: event.controller.number };
+    if (store.state.controlEditMode === 'midi' && event.value) {
+      store.dispatch('setControlEditMidi', value);
+    } else {
+      store.dispatch('triggerControlAction', value);
+    }
+  });
 }
