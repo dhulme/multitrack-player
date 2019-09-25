@@ -35,7 +35,7 @@ export function clickEventLoop(store) {
     return;
   }
 
-  const clickInterval = 60 / (store.state.clickBpm / (unit / 4));
+  const clickInterval = getClickInterval(store.state);
   if (store.state.playPosition / eventLoopCount > clickInterval) {
     const bufferSource = audioContext.createBufferSource();
     bufferSource
@@ -65,4 +65,16 @@ export function resetClickEventLoopCount() {
 
 export function setClickGain(value) {
   gainNode.gain.value = value;
+}
+
+export function getClickInterval(state) {
+  return 60 / (state.clickBpm / (state.clickTimeSignature.unit / 4));
+}
+
+export function getClickBeats(state) {
+  const beats = Math.floor(state.playPosition / getClickInterval(state));
+  return [
+    Math.floor(beats / state.clickTimeSignature.beats),
+    (beats % state.clickTimeSignature.beats) + 1
+  ];
 }

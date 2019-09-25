@@ -15,20 +15,12 @@
       ><VIcon>{{ mdiMetronome }}</VIcon></VBtn
     >
 
-    <VTextField
-      class="input-thin"
-      single-line
-      hide-details
-      v-model="clickBpm"
-    />
-    <VTextField
-      class="input-thin"
-      single-line
-      hide-details
-      v-model="clickTimeSignature"
-    />
+    <TextField v-model="clickBpm" />
+    <TextField v-model="clickTimeSignature" />
 
-    <Clock />
+    <Clock :values="timeValues" title="Time" />
+
+    <Clock :values="beatsValues" title="Bars" />
 
     <VSlider
       class="gain"
@@ -50,11 +42,13 @@
 
 <script>
 import Clock from './Clock';
+import TextField from './TextField';
 import { mdiMetronome, mdiStop, mdiWrench, mdiInformation } from '@mdi/js';
 
 export default {
   components: {
-    Clock
+    Clock,
+    TextField
   },
   data() {
     return {
@@ -100,20 +94,21 @@ export default {
           unit: Number(unit) || ''
         });
       }
+    },
+    timeValues() {
+      const playPosition = this.$store.state.playPosition;
+      return [
+        Math.floor(playPosition / 60),
+        Math.floor(playPosition % 60),
+        Math.floor((playPosition % 1) * 10)
+      ];
+    },
+    beatsValues() {
+      return this.$store.getters.playBeatsPosition;
     }
   }
 };
 </script>
-
-<style lang="scss">
-.input-thin {
-  max-width: 4rem;
-  margin: 0 0.5rem;
-}
-.input-thin input {
-  text-align: center;
-}
-</style>
 
 <style lang="scss" scoped>
 .gain {

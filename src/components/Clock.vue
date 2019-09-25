@@ -1,28 +1,20 @@
 <template>
   <VRow class="text-center container">
-    <VCol cols="3">{{ minutes }}</VCol>
-    <VCol cols="1">:</VCol>
-    <VCol cols="3">{{ seconds }}</VCol>
-    <VCol cols="1">:</VCol>
-    <VCol cols="3">{{ milliseconds }}</VCol>
+    <div>{{ title }}</div>
+    <template v-for="(value, index) in values">
+      <VCol cols="3" :key="'value' + index">{{ value }}</VCol>
+      <VCol v-if="index < values.length" cols="1" :key="'spacer' + index"
+        >:</VCol
+      >
+    </template>
   </VRow>
 </template>
 
 <script>
 export default {
-  computed: {
-    playPosition() {
-      return this.$store.state.playPosition;
-    },
-    minutes() {
-      return Math.floor(this.playPosition / 60);
-    },
-    seconds() {
-      return Math.floor(this.playPosition % 60);
-    },
-    milliseconds() {
-      return Math.floor((this.playPosition % 1) * 10);
-    }
+  props: {
+    values: Array,
+    title: String
   }
 };
 </script>

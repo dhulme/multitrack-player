@@ -1,6 +1,9 @@
 {
-	"name": "multitrack-player",
-	"author": {"name": "David Hulme", "url": "http://dhulme.co.uk"},
+  "name": "multitrack-player",
+  "author": {
+    "name": "David Hulme",
+    "url": "http://dhulme.co.uk"
+  },
   "version": "0.1.0",
   "private": true,
   "scripts": {

@@ -6,7 +6,8 @@ import {
   setClickPan,
   initClick,
   resetClickEventLoopCount,
-  setClickGain
+  setClickGain,
+  getClickBeats
 } from './click';
 
 Vue.use(Vuex);
@@ -41,6 +42,9 @@ const store = new Vuex.Store({
   getters: {
     getTrack(state) {
       return track => state.tracks.find(_ => _ === track);
+    },
+    playBeatsPosition(state) {
+      return getClickBeats(state);
     }
   },
   mutations: {
