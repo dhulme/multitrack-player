@@ -1,19 +1,9 @@
 <template>
   <VRow justify="end" align="center">
-    <VBtn
-      text
-      icon
-      @click="
-        mapControlOrAction('playPause', () => this.$store.dispatch('playPause'))
-      "
-    >
+    <VBtn text icon @click="mapControlOrAction('playPause', 'playPause')">
       <VIcon>{{ playPauseIcon }}</VIcon>
     </VBtn>
-    <VBtn
-      text
-      icon
-      @click="mapControlOrAction('stop', () => this.$store.dispatch('stop'))"
-    >
+    <VBtn text icon @click="mapControlOrAction('stop', 'stop')">
       <VIcon>{{ mdiStop }}</VIcon>
     </VBtn>
 
@@ -21,11 +11,7 @@
       text
       icon
       :outlined="$store.state.clickActive"
-      @click="
-        mapControlOrAction('clickActive', () =>
-          this.$store.dispatch('toggleClickActive')
-        )
-      "
+      @click="mapControlOrAction('clickActive', 'toggleClickActive')"
     >
       <VIcon>{{ mdiMetronome }}</VIcon>
     </VBtn>
@@ -123,9 +109,9 @@ export default {
     }
   },
   methods: {
-    mapControlOrAction(controlName, handler) {
+    mapControlOrDispatchAction(controlName, actionName) {
       if (!this.$store.state.controlEditMode) {
-        return handler();
+        return this.$store.dispatch(actionName);
       }
 
       this.$store.dispatch('setControlEditSelected', controlName);
