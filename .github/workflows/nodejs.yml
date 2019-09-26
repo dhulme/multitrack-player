@@ -12,21 +12,19 @@ jobs:
         node-version: [8.x, 10.x, 12.x]
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: npm install, build
-      run: |
-        npm install
-        npm run build
-      env:
-        CI: true
-    - name: Deploy to pages
-      uses: maxheld83/ghpages@v0.2.1
-      env:
-        BUILD_DIR: dist/
-      secrets:
-        - GH_PAT
-        
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: npm install, build
+        run: |
+          npm install
+          npm run build
+        env:
+          CI: true
+      - name: Deploy to pages
+        uses: actions/maxheld83/ghpages@v0.2.1
+        env:
+          BUILD_DIR: dist/
+          GH_PAT: ${{ secrets.GH_PAT }}
