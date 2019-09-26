@@ -42,7 +42,7 @@ const store = new Vuex.Store({
     controlEditMode: null,
     controlEditSelected: null,
     /**
-     * { [actionName]: { type: 'note' | 'controlChange' | 'key', value: Number } }
+     * { [actionName]: { type: 'note' | 'controlChange' | 'key', value: any } }
      */
     controlEditMap: {}
   },
@@ -52,6 +52,9 @@ const store = new Vuex.Store({
     },
     playBeatsPosition(state) {
       return getClickBeats(state);
+    },
+    getControlMapping(state) {
+      return controlName => state.controlEditMap[controlName];
     }
   },
   mutations: {
@@ -209,22 +212,22 @@ const store = new Vuex.Store({
       commit('setMidiDeviceName', value);
       initMidiEvents(value, store);
     },
-    setControlEditMode({ commit }, value) {
-      commit('setControlEditMode', value);
+    toggleControlEditMode({ commit, state }) {
+      commit('setControlEditMode', !state.controlEditMode);
       commit('setDialog', null);
     },
     setControlEditSelected({ commit }, value) {
       commit('setControlEditSelected', value);
     },
-    setControlEditMidi({ commit, dispatch }, midi) {
-      commit('setControlEdit', midi);
-      dispatch('setControlEditMode', null);
+    setControlEdit({ commit, dispatch }, { type, value }) {
+      commit('setControlEdit', { type, value });
+      dispatch('toggleControlEditMode');
     },
     triggerControlAction({ state, dispatch }, eventValue) {
       Object.entries(state.controlEditMap).find(([action, mapValue]) => {
         if (
           mapValue.type === eventValue.type &&
-          mapValue.number === eventValue.number
+          mapValue.value === eventValue.value
         ) {
           dispatch(action);
         }

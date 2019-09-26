@@ -25,17 +25,17 @@ export function initMidiEvents(deviceName, store) {
 
   input.removeListener();
   input.addListener('noteon', 'all', event => {
-    const value = event.note.number;
-    if (store.state.controlEditMode === 'midi') {
-      store.dispatch('setControlEditMidi', { type: 'note', value });
-    }
+    store.dispatch(
+      store.state.controlEditMode ? 'setControlEdit' : 'triggerControlAction',
+      { type: 'note', value: event.note.number }
+    );
   });
   input.addListener('controlchange', 'all', event => {
-    const value = { type: 'controlChange', number: event.controller.number };
-    if (store.state.controlEditMode === 'midi' && event.value) {
-      store.dispatch('setControlEditMidi', value);
-    } else {
-      store.dispatch('triggerControlAction', value);
-    }
+    store.dispatch(
+      store.state.controlEditMode && event.value === 127
+        ? 'setControlEdit'
+        : 'triggerControlAction',
+      { type: 'controlChange', value: event.controller.number }
+    );
   });
 }

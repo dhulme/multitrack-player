@@ -35,13 +35,13 @@
               class="mr-4"
               small
               outlined
-              @click="$store.dispatch('setControlEditMode', 'midi')"
+              @click="$store.dispatch('toggleControlEditMode')"
               >MIDI</VBtn
             >
             <VBtn
               small
               outlined
-              @click="$store.dispatch('setControlEditMode', 'key')"
+              @click="$store.dispatch('toggleControlEditMode')"
               >Key</VBtn
             >
           </VRow>

@@ -1,7 +1,15 @@
 <template>
   <VRow justify="end" align="center">
-    <VBtn icon @click="mapControlOrDispatchAction('playPause')">
+    <VBtn
+      icon
+      @click="mapControlOrDispatchAction('playPause')"
+      class="icon-button"
+    >
       <VIcon>{{ playPauseIcon }}</VIcon>
+      <VIcon v-if="$store.state.controlEditMode">{{
+        getControlMappingIcon('playPause')
+      }}</VIcon>
+      {{ getControlMappingName('playPause') }}
     </VBtn>
     <VBtn icon @click="mapControlOrDispatchAction('stop')">
       <VIcon>{{ mdiStop }}</VIcon>
@@ -43,7 +51,14 @@
 <script>
 import Clock from './Clock';
 import TextField from './TextField';
-import { mdiMetronome, mdiStop, mdiWrench, mdiInformation } from '@mdi/js';
+import {
+  mdiMetronome,
+  mdiStop,
+  mdiWrench,
+  mdiInformation,
+  mdiKeyboard,
+  mdiPiano
+} from '@mdi/js';
 
 export default {
   components: {
@@ -114,6 +129,24 @@ export default {
       }
 
       this.$store.dispatch('setControlEditSelected', controlName);
+    },
+    getControlMappingIcon(controlName) {
+      const controlMapping = this.$store.getters.getControlMapping(controlName);
+
+      if (controlMapping) {
+        return {
+          key: mdiKeyboard,
+          note: mdiPiano,
+          controlChange: mdiPiano
+        }[controlMapping.type];
+      }
+    },
+    getControlMappingName(controlName) {
+      if (!this.$store.state.controlEditMode) {
+        return;
+      }
+      const controlMapping = this.$store.getters.getControlMapping(controlName);
+      return controlMapping ? controlMapping.value : '';
     }
   }
 };
@@ -122,5 +155,9 @@ export default {
 <style lang="scss" scoped>
 .gain {
   max-width: 10rem;
+}
+
+.icon-button {
+  text-transform: lowercase;
 }
 </style>

@@ -21,6 +21,7 @@ import Controls from '@/components/Controls';
 
 import { initClick } from './click';
 import { initMidi } from './midi';
+import { initKeyEvents } from './key';
 
 export default {
   components: {
@@ -28,6 +29,7 @@ export default {
   },
   async mounted() {
     await Promise.all([initMidi(), initClick()]);
+    initKeyEvents(this.$store);
     this.$store.commit('setLoading', false);
   },
   watch: {
