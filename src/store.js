@@ -28,7 +28,7 @@ const store = new Vuex.Store({
     clickActive: false,
     clickBpm: 102,
     clickGainValue: 1,
-    masterGainValue: 1,
+    trackGainValue: 1,
     soloTrack: null,
     dialog: null,
     trackPanning: 0,
@@ -76,8 +76,8 @@ const store = new Vuex.Store({
     setPlayPosition(state, value) {
       state.playPosition = value;
     },
-    setMasterGainValue(state, value) {
-      state.masterGainValue = value;
+    setMasterTrackGainValue(state, value) {
+      state.trackGainValue = value;
     },
     setClickGainValue(state, value) {
       state.clickGainValue = value;
@@ -168,8 +168,8 @@ const store = new Vuex.Store({
     toggleClickActive({ commit, state }) {
       commit('setClickActive', !state.clickActive);
     },
-    setMasterGainValue({ commit, state }, value) {
-      commit('setMasterGainValue', value);
+    setMasterTrackGainValue({ commit, state }, value) {
+      commit('setMasterTrackGainValue', value);
       state.tracks.forEach(setTrackGain);
     },
     setTrackGainValue({ commit }, { track, value }) {
@@ -237,7 +237,7 @@ const store = new Vuex.Store({
 });
 
 function setTrackGain(track) {
-  track.setGain(store.state.masterGainValue, store.state.soloTrack);
+  track.setGain(store.state.trackGainValue, store.state.soloTrack);
 }
 
 const trackEventLoopInterval = 0.01;

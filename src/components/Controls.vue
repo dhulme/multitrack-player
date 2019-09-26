@@ -26,18 +26,9 @@
     <TextField v-model="clickBpm" />
     <TextField v-model="clickTimeSignature" />
 
-    <Clock :values="timeValues" title="Time" />
+    <Clock :values="timeValues" :icon="mdiClockOutline" class="mr-4" />
 
-    <Clock :values="beatsValues" title="Bars" />
-
-    <VSlider
-      class="gain"
-      hide-details
-      v-model="gain"
-      min="0"
-      max="1.25"
-      step="0.01"
-    />
+    <Clock :values="beatsValues" :icon="mdiMusicNote" />
 
     <VBtn text icon @click="$store.dispatch('toggleSettingsDialog')">
       <VIcon>{{ mdiWrench }}</VIcon>
@@ -57,7 +48,9 @@ import {
   mdiWrench,
   mdiInformation,
   mdiKeyboard,
-  mdiPiano
+  mdiPiano,
+  mdiMusicNote,
+  mdiClockOutline
 } from '@mdi/js';
 
 export default {
@@ -70,7 +63,9 @@ export default {
       mdiStop,
       mdiMetronome,
       mdiWrench,
-      mdiInformation
+      mdiInformation,
+      mdiMusicNote,
+      mdiClockOutline
     };
   },
   computed: {
@@ -80,14 +75,6 @@ export default {
         paused: 'mdi-play',
         stopped: 'mdi-play'
       }[this.$store.state.playState];
-    },
-    gain: {
-      get() {
-        return this.$store.state.masterGainValue;
-      },
-      set(value) {
-        this.$store.dispatch('setMasterGainValue', value);
-      }
     },
     clickBpm: {
       get() {
@@ -153,10 +140,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.gain {
-  max-width: 10rem;
-}
-
 .icon-button {
   text-transform: lowercase;
 }

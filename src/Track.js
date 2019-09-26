@@ -70,9 +70,9 @@ export default class Track {
     }
   }
 
-  setGain(masterGainValue, soloTrack) {
+  setGain(trackGainValue, soloTrack) {
     this.gainNode.gain.value = this.isSoloOrActive(soloTrack)
-      ? masterGainValue + this.gainValue - 1
+      ? trackGainValue + this.gainValue - 1
       : 0;
   }
 

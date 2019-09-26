@@ -16,6 +16,15 @@
           />
 
           <VSlider
+            label="Track volume"
+            hide-details
+            v-model="trackGain"
+            min="0"
+            max="2"
+            step="0.01"
+          />
+
+          <VSlider
             label="Click volume"
             v-model="clickGain"
             min="0"
@@ -100,6 +109,14 @@ export default {
       },
       set(value) {
         this.$store.dispatch('setClickGainValue', value);
+      }
+    },
+    trackGain: {
+      get() {
+        return this.$store.state.trackGainValue;
+      },
+      set(value) {
+        this.$store.dispatch('setMasterTrackGainValue', value);
       }
     },
     midiDevice: {

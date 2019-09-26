@@ -1,32 +1,41 @@
 <template>
-  <VRow class="text-center container">
-    <div>{{ title }}</div>
+  <span class="text-center clock-container">
+    <VIcon>{{ icon }}</VIcon>
     <template v-for="(value, index) in values">
-      <VCol cols="3" :key="'value' + index">{{ value }}</VCol>
-      <VCol v-if="index < values.length" cols="1" :key="'spacer' + index"
-        >:</VCol
+      <div class="value" :key="'value' + index">{{ value }}</div>
+      <div
+        class="spacer"
+        v-if="index < values.length - 1"
+        :key="'spacer' + index"
       >
+        :
+      </div>
     </template>
-  </VRow>
+  </span>
 </template>
 
 <script>
 export default {
   props: {
     values: Array,
-    title: String
+    icon: Object
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.container {
-  max-width: 15rem;
-  min-width: 15rem;
+.clock-container {
   user-select: none;
+  flex-grow: 0;
 
-  & > div {
-    padding: 0;
+  .value {
+    width: 2rem;
+    display: inline-block;
+  }
+
+  .spacer {
+    width: 0.25rem;
+    display: inline-block;
   }
 }
 </style>
