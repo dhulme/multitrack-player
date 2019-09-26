@@ -2,7 +2,12 @@
   <span class="text-center clock-container">
     <VIcon>{{ icon }}</VIcon>
     <template v-for="(value, index) in values">
-      <div class="value" :key="'value' + index">{{ value }}</div>
+      <TextField
+        class="value"
+        :key="'value' + index"
+        :value="value"
+        @input="set($event, index)"
+      />
       <div
         class="spacer"
         v-if="index < values.length - 1"
@@ -15,10 +20,22 @@
 </template>
 
 <script>
+import TextField from './TextField';
+
 export default {
+  components: {
+    TextField
+  },
   props: {
     values: Array,
     icon: String
+  },
+  methods: {
+    set(value, index) {
+      const values = [...this.values];
+      values[index] = Number(value);
+      this.$emit('input', values);
+    }
   }
 };
 </script>

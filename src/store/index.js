@@ -161,6 +161,9 @@ const store = new Vuex.Store({
     },
     setControlEditSelected({ commit }, value) {
       commit('setControlEditSelected', value);
+    },
+    setPlayPosition({ commit }, value) {
+      commit('setPlayPosition', value);
     }
   }
 });

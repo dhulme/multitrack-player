@@ -4,7 +4,8 @@
     single-line
     hide-details
     v-model="localValue"
-    @keyup.enter="$emit('input', localValue)"
+    @keyup.enter="set"
+    ref="textField"
   />
 </template>
 
@@ -18,7 +19,15 @@ export default {
   },
   watch: {
     value(value) {
-      this.value = value;
+      if (document.activeElement !== this.$refs.textField.$refs.input) {
+        this.localValue = value;
+      }
+    }
+  },
+  methods: {
+    set() {
+      this.$emit('input', this.localValue);
+      this.$refs.textField.blur();
     }
   }
 };

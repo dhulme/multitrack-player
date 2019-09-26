@@ -36,7 +36,12 @@
     <TextField v-model="clickBpm" />
     <TextField v-model="clickTimeSignature" />
 
-    <Clock :values="timeValues" :icon="mdiClockOutline" class="mr-4" />
+    <Clock
+      :values="timeValues"
+      @input="setTime"
+      :icon="mdiClockOutline"
+      class="mr-4"
+    />
 
     <Clock :values="beatsValues" :icon="mdiMusicNote" />
 
@@ -155,6 +160,10 @@ export default {
       if (controlMapping) {
         return 'yellow';
       }
+    },
+    setTime(values) {
+      const playPosition = values[0] * 60 + values[1] + values[2] / 10;
+      this.$store.dispatch('setPlayPosition', playPosition);
     }
   }
 };
