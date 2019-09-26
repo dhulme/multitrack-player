@@ -3,7 +3,6 @@ import Vuex from 'vuex';
 import {
   clickEventLoop,
   resetClickEventLoopCount,
-  setClickGain,
   getClickBeats
 } from '../click';
 import settings from './settings';
@@ -151,10 +150,6 @@ const store = new Vuex.Store({
     },
     setClickBpm({ commit }, value) {
       commit('setClickBpm', value);
-    },
-    setClickGainValue({ commit }, value) {
-      commit('setClickGainValue', value);
-      setClickGain(value);
     },
     setClickTimeSignature({ commit }, value) {
       commit('setClickTimeSignature', value);

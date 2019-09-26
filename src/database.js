@@ -1,7 +1,7 @@
-import idb from 'idb';
+import { openDB } from 'idb';
 
 const defaultCollection = 'default';
-const dbConnection = idb.openDB('multitrack-player', 1, {
+const dbConnection = openDB('multitrack-player', 1, {
   upgrade(db) {
     db.createObjectStore(defaultCollection);
   }
