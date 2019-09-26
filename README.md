@@ -11,8 +11,8 @@ Built using Vue, the Vuetify UI framework and peaks.js audio waveform library.
 🕰️ Metronome/click  
 🎛️ Customizable panning of click/tracks  
 🔇 Solo/mute for all tracks  
-🔊 Individual track and master gain control
-🎹 Customisable MIDI and keyboard control
+🔊 Individual track and master gain control 
+🎹 Customisable MIDI and keyboard control 
 
 ![Screenshot](./screenshot.png)
 
