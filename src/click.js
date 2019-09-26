@@ -70,7 +70,7 @@ export function setClickGain(value) {
 }
 
 export function getClickInterval(state) {
-  return 60 / (state.clickBpm / (state.clickTimeSignature.unit / 4));
+  return 60 / (state.clickBpm * (state.clickTimeSignature.unit / 4));
 }
 
 export function getClickBeats(state) {

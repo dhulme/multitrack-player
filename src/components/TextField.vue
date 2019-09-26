@@ -10,10 +10,10 @@
 
 <script>
 export default {
-  props: ['values'],
+  props: ['value'],
   data() {
     return {
-      localValue: ''
+      localValue: this.value
     };
   },
   watch: {

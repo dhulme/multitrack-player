@@ -18,7 +18,7 @@
 export default {
   props: {
     values: Array,
-    icon: Object
+    icon: String
   }
 };
 </script>
