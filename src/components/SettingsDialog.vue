@@ -89,7 +89,7 @@ export default {
     },
     trackPanning: {
       get() {
-        return this.$store.state.trackPanning;
+        return this.$store.state.settings.trackPanning;
       },
       set(value) {
         return this.$store.dispatch('setTrackPanning', value);
@@ -97,7 +97,7 @@ export default {
     },
     clickPanning: {
       get() {
-        return this.$store.state.clickPanning;
+        return this.$store.state.settings.clickPanning;
       },
       set(value) {
         return this.$store.dispatch('setClickPanning', value);
@@ -105,7 +105,7 @@ export default {
     },
     clickGain: {
       get() {
-        return this.$store.state.clickGainValue;
+        return this.$store.state.settings.clickGainValue;
       },
       set(value) {
         this.$store.dispatch('setClickGainValue', value);
@@ -113,7 +113,7 @@ export default {
     },
     trackGain: {
       get() {
-        return this.$store.state.trackGainValue;
+        return this.$store.state.settings.trackGainValue;
       },
       set(value) {
         this.$store.dispatch('setMasterTrackGainValue', value);
@@ -121,7 +121,7 @@ export default {
     },
     midiDevice: {
       get() {
-        return this.$store.state.midiDevice;
+        return this.$store.state.settings.midiDevice;
       },
       set(value) {
         this.$store.dispatch('setMidiDeviceName', value);

@@ -1,50 +1,39 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import Track from './Track';
 import {
   clickEventLoop,
-  setClickPan,
   resetClickEventLoopCount,
   setClickGain,
   getClickBeats
-} from './click';
-import { initMidiEvents } from './midi';
+} from '../click';
+import settings from './settings';
+
+import { tracksAudioContext, newTrack, setTrackGain } from '../tracks';
 
 Vue.use(Vuex);
 
-const trackAudioContext = new AudioContext();
-const trackStereoPannerNode = new StereoPannerNode(trackAudioContext, {
-  pan: 0
-});
-
-let eventLoopStart = trackAudioContext.currentTime;
+let eventLoopStart = tracksAudioContext.currentTime;
 let trackEventLoopCount = 0;
 
 const store = new Vuex.Store({
+  modules: {
+    settings
+  },
   state: {
     playState: 'stopped',
     playPosition: 0,
     tracks: [],
     clickActive: false,
     clickBpm: 102,
-    clickGainValue: 1,
-    trackGainValue: 1,
     soloTrack: null,
     dialog: null,
-    trackPanning: 0,
-    clickPanning: 0,
     loading: true,
     clickTimeSignature: {
       beats: 4,
       unit: 4
     },
-    midiDeviceName: null,
     controlEditMode: null,
-    controlEditSelected: null,
-    /**
-     * { [actionName]: { type: 'note' | 'controlChange' | 'key', value: any } }
-     */
-    controlEditMap: {}
+    controlEditSelected: null
   },
   getters: {
     getTrack(state) {
@@ -52,9 +41,6 @@ const store = new Vuex.Store({
     },
     playBeatsPosition(state) {
       return getClickBeats(state);
-    },
-    getControlMapping(state) {
-      return controlName => state.controlEditMap[controlName];
     }
   },
   mutations: {
@@ -76,12 +62,7 @@ const store = new Vuex.Store({
     setPlayPosition(state, value) {
       state.playPosition = value;
     },
-    setMasterTrackGainValue(state, value) {
-      state.trackGainValue = value;
-    },
-    setClickGainValue(state, value) {
-      state.clickGainValue = value;
-    },
+
     setTrackGainValue(state, { track, value }) {
       track.gainValue = value;
     },
@@ -94,12 +75,6 @@ const store = new Vuex.Store({
     setDialog(state, dialog) {
       state.dialog = dialog;
     },
-    setTrackPanning(state, value) {
-      state.trackPanning = value;
-    },
-    setClickPanning(state, value) {
-      state.clickPanning = value;
-    },
     setClickBpm(state, value) {
       state.clickBpm = value;
     },
@@ -109,17 +84,11 @@ const store = new Vuex.Store({
     setClickTimeSignature(state, value) {
       state.clickTimeSignature = value;
     },
-    setMidiDeviceName(state, value) {
-      state.midiDeviceName = value;
-    },
     setControlEditMode(state, value) {
       state.controlEditMode = value;
     },
     setControlEditSelected(state, value) {
       state.controlEditSelected = value;
-    },
-    setControlEdit(state, value) {
-      state.controlEditMap[state.controlEditSelected] = value;
     }
   },
   actions: {
@@ -131,14 +100,14 @@ const store = new Vuex.Store({
       };
       const newState = states[state.playState];
       commit('setPlayState', newState);
-      if (trackAudioContext.state === 'suspended') {
-        trackAudioContext.resume();
+      if (tracksAudioContext.state === 'suspended') {
+        tracksAudioContext.resume();
       }
       if (newState === 'playing') {
-        eventLoopStart = trackAudioContext.currentTime;
+        eventLoopStart = tracksAudioContext.currentTime;
         trackEventLoopCount = 0;
         state.tracks.forEach(track =>
-          track.play(trackAudioContext.currentTime, state.playPosition)
+          track.play(tracksAudioContext.currentTime, state.playPosition)
         );
       } else {
         state.tracks.forEach(track => track.pause());
@@ -154,23 +123,13 @@ const store = new Vuex.Store({
       state.tracks.forEach(track => track.eventLoop(store.state.playPosition));
     },
     addTrack({ commit }, arrayBuffer) {
-      const track = new Track({
-        arrayBuffer,
-        audioContext: trackAudioContext,
-        stereoPannerNode: trackStereoPannerNode,
-        store
-      });
-      commit('addTrack', track);
+      commit('addTrack', newTrack(arrayBuffer));
     },
     removeTrack({ commit }, track) {
       commit('removeTrack', track);
     },
     toggleClickActive({ commit, state }) {
       commit('setClickActive', !state.clickActive);
-    },
-    setMasterTrackGainValue({ commit, state }, value) {
-      commit('setMasterTrackGainValue', value);
-      state.tracks.forEach(setTrackGain);
     },
     setTrackGainValue({ commit }, { track, value }) {
       commit('setTrackGainValue', { track, value });
@@ -190,14 +149,6 @@ const store = new Vuex.Store({
     toggleAboutDialog({ commit, state }) {
       commit('setDialog', state.dialog === 'about' ? null : 'about');
     },
-    setTrackPanning({ commit }, value) {
-      commit('setTrackPanning', value);
-      trackStereoPannerNode.pan.value = value;
-    },
-    setClickPanning({ commit }, value) {
-      commit('setClickPanning', value);
-      setClickPan(value);
-    },
     setClickBpm({ commit }, value) {
       commit('setClickBpm', value);
     },
@@ -208,43 +159,22 @@ const store = new Vuex.Store({
     setClickTimeSignature({ commit }, value) {
       commit('setClickTimeSignature', value);
     },
-    setMidiDeviceName({ commit }, value) {
-      commit('setMidiDeviceName', value);
-      initMidiEvents(value, store);
-    },
+
     toggleControlEditMode({ commit, state }) {
       commit('setControlEditMode', !state.controlEditMode);
       commit('setDialog', null);
     },
     setControlEditSelected({ commit }, value) {
       commit('setControlEditSelected', value);
-    },
-    setControlEdit({ commit, dispatch }, { type, value }) {
-      commit('setControlEdit', { type, value });
-      dispatch('toggleControlEditMode');
-    },
-    triggerControlAction({ state, dispatch }, eventValue) {
-      Object.entries(state.controlEditMap).find(([action, mapValue]) => {
-        if (
-          mapValue.type === eventValue.type &&
-          mapValue.value === eventValue.value
-        ) {
-          dispatch(action);
-        }
-      });
     }
   }
 });
-
-function setTrackGain(track) {
-  track.setGain(store.state.trackGainValue, store.state.soloTrack);
-}
 
 const trackEventLoopInterval = 0.01;
 
 setInterval(() => {
   if (store.state.playState === 'playing') {
-    const trackDelta = trackAudioContext.currentTime - eventLoopStart;
+    const trackDelta = tracksAudioContext.currentTime - eventLoopStart;
     if (trackDelta / trackEventLoopCount > trackEventLoopInterval) {
       trackEventLoop();
       trackEventLoopCount++;

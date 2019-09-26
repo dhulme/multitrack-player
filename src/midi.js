@@ -26,13 +26,15 @@ export function initMidiEvents(deviceName, store) {
   input.removeListener();
   input.addListener('noteon', 'all', event => {
     store.dispatch(
-      store.state.controlEditMode ? 'setControlEdit' : 'triggerControlAction',
+      store.rootState.controlEditMode
+        ? 'setControlEdit'
+        : 'triggerControlAction',
       { type: 'note', value: event.note.number }
     );
   });
   input.addListener('controlchange', 'all', event => {
     store.dispatch(
-      store.state.controlEditMode && event.value === 127
+      store.rootState.controlEditMode && event.value === 127
         ? 'setControlEdit'
         : 'triggerControlAction',
       { type: 'controlChange', value: event.controller.number }
