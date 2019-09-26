@@ -1,17 +1,25 @@
 <template>
   <VRow justify="end" align="center">
     <VBtn
+      v-if="controlEditMode"
+      small
+      @click="$store.dispatch('toggleControlEditMode')"
+      >Done mapping</VBtn
+    >
+    <VBtn
       icon
       @click="mapControlOrDispatchAction('playPause')"
-      class="icon-button"
+      :title="getControlMappingName('playPause')"
+      :color="getControlMappingColor('playPause')"
     >
       <VIcon>{{ playPauseIcon }}</VIcon>
-      <VIcon v-if="$store.state.controlEditMode">{{
-        getControlMappingIcon('playPause')
-      }}</VIcon>
-      {{ getControlMappingName('playPause') }}
     </VBtn>
-    <VBtn icon @click="mapControlOrDispatchAction('stop')">
+    <VBtn
+      icon
+      @click="mapControlOrDispatchAction('stop')"
+      :title="getControlMappingName('stop')"
+      :color="getControlMappingColor('stop')"
+    >
       <VIcon>{{ mdiStop }}</VIcon>
     </VBtn>
 
@@ -19,6 +27,8 @@
       icon
       :outlined="$store.state.clickActive"
       @click="mapControlOrDispatchAction('clickActive', 'toggleClickActive')"
+      :title="getControlMappingName('clickActive')"
+      :color="getControlMappingColor('clickActive')"
     >
       <VIcon>{{ mdiMetronome }}</VIcon>
     </VBtn>
@@ -47,8 +57,6 @@ import {
   mdiStop,
   mdiWrench,
   mdiInformation,
-  mdiKeyboard,
-  mdiPiano,
   mdiMusicNote,
   mdiClockOutline
 } from '@mdi/js';
@@ -107,40 +115,49 @@ export default {
     },
     beatsValues() {
       return this.$store.getters.playBeatsPosition;
+    },
+    controlEditMode() {
+      return this.$store.state.controlEditMode;
     }
   },
   methods: {
     mapControlOrDispatchAction(controlName, actionName) {
-      if (!this.$store.state.controlEditMode) {
+      if (!this.controlEditMode) {
         return this.$store.dispatch(actionName || controlName);
       }
 
       this.$store.dispatch('setControlEditSelected', controlName);
     },
-    getControlMappingIcon(controlName) {
-      const controlMapping = this.$store.getters.getControlMapping(controlName);
-
-      if (controlMapping) {
-        return {
-          key: mdiKeyboard,
-          note: mdiPiano,
-          controlChange: mdiPiano
-        }[controlMapping.type];
-      }
-    },
     getControlMappingName(controlName) {
-      if (!this.$store.state.controlEditMode) {
+      if (!this.controlEditMode) {
         return;
       }
       const controlMapping = this.$store.getters.getControlMapping(controlName);
-      return controlMapping ? controlMapping.value : '';
+      if (controlMapping) {
+        const name =
+          {
+            ' ': 'Space'
+          }[controlMapping.value] || controlMapping.value;
+        const type = {
+          key: 'Keyboard',
+          note: 'Note',
+          controlChange: 'Control change'
+        }[controlMapping.type];
+        return `${type}: ${name}`;
+      }
+      return '';
+    },
+    getControlMappingColor(controlName) {
+      if (!this.controlEditMode) {
+        return;
+      }
+      const controlMapping = this.$store.getters.getControlMapping(controlName);
+      if (controlMapping) {
+        return 'yellow';
+      }
     }
   }
 };
 </script>
 
-<style lang="scss" scoped>
-.icon-button {
-  text-transform: lowercase;
-}
-</style>
+<style lang="scss" scoped></style>

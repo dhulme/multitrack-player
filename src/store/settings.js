@@ -30,8 +30,8 @@ const store = {
     setMidiDeviceName(state, value) {
       state.midiDeviceName = value;
     },
-    setControlEdit(state, value) {
-      state.controlEditMap[state.controlEditSelected] = value;
+    setControlEdit(state, { key, value }) {
+      state.controlEditMap[key] = value;
     },
     setMasterTrackGainValue(state, value) {
       state.trackGainValue = value;
@@ -61,9 +61,11 @@ const store = {
       initMidiEvents(value, { rootState, dispatch });
       saveSettings();
     },
-    setControlEdit({ commit, dispatch }, { type, value }) {
-      commit('setControlEdit', { type, value });
-      dispatch('toggleControlEditMode');
+    setControlEdit({ commit, rootState }, { type, value }) {
+      commit('setControlEdit', {
+        key: rootState.controlEditSelected,
+        value: { type, value }
+      });
       saveSettings();
     },
     setClickGainValue({ commit }, value) {
