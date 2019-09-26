@@ -9,7 +9,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [8.x, 10.x, 12.x]
+        node-version: [10.x]
 
     steps:
       - uses: actions/checkout@v1
@@ -24,7 +24,7 @@ jobs:
         env:
           CI: true
       - name: Deploy to pages
-        uses: actions/maxheld83/ghpages@v0.2.1
+        uses: maxheld83/ghpages@v0.2.1
         env:
           BUILD_DIR: dist/
           GH_PAT: ${{ secrets.GH_PAT }}
