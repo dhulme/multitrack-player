@@ -1,7 +1,5 @@
 # Multitrack Player
 
-![](https://github.com/dhulme/multitrack-player/workflows/Node%20CI/badge.svg)
-
 http://dhulme.co.uk/multitrack-player
 
 A multitrack audio file player for the browser.
