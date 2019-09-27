@@ -41,9 +41,9 @@ const store = {
     }
   },
   actions: {
-    setMasterTrackGainValue({ commit, rootState }, value) {
+    setMasterTrackGainValue({ commit, rootState, state }, value) {
       commit('setMasterTrackGainValue', value);
-      rootState.tracks.forEach(setTrackGain);
+      rootState.tracks.forEach(track => setTrackGain(track, state, rootState));
       saveSettings();
     },
     setTrackPanning({ commit }, value) {
@@ -82,17 +82,17 @@ const store = {
           dispatch(action);
         }
       });
+    },
+    async initSettings({ state, dispatch, rootState }) {
+      const settings = await get('settings');
+      Object.assign(state, settings);
+      initMidiEvents(state.midiDeviceName, { rootState, dispatch });
     }
   }
 };
 
 function saveSettings() {
   set('settings', store.state);
-}
-
-export async function initSettings() {
-  const settings = await get('settings');
-  Object.assign(store.state, settings);
 }
 
 export default store;

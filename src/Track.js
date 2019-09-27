@@ -11,6 +11,7 @@ export default class Track {
     this.gainNode = audioContext.createGain();
     this.gainValue = 1;
     this.active = true;
+    this.playing = false;
 
     audioContext.decodeAudioData(arrayBuffer, audioBuffer => {
       this.audioBuffer = audioBuffer;
@@ -29,17 +30,23 @@ export default class Track {
   }
 
   play(when, offset = 0) {
+    if (this.playing) {
+      this.audioSource.stop(when);
+    }
+
+    this.initAudioSource();
     this.audioSource.start(when, offset);
+    this.playing = true;
   }
 
   pause(when) {
     this.audioSource.stop(when);
-    this.initAudioSource();
+    this.playing = false;
   }
 
   stop(when) {
     this.audioSource.stop(when);
-    this.initAudioSource();
+    this.playing = false;
   }
 
   setPeaksPlayheadTime(playheadTime) {

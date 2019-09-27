@@ -121,7 +121,7 @@ export default {
     },
     midiDevice: {
       get() {
-        return this.$store.state.settings.midiDevice;
+        return this.$store.state.settings.midiDeviceName;
       },
       set(value) {
         this.$store.dispatch('setMidiDeviceName', value);

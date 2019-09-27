@@ -7,7 +7,12 @@ import {
 } from '../click';
 import settings from './settings';
 
-import { tracksAudioContext, newTrack, setTrackGain } from '../tracks';
+import {
+  tracksAudioContext,
+  newTrack,
+  setTrackGain,
+  playTracks
+} from '../tracks';
 
 Vue.use(Vuex);
 
@@ -62,9 +67,6 @@ const store = new Vuex.Store({
       state.playPosition = value;
     },
 
-    setTrackGainValue(state, { track, value }) {
-      track.gainValue = value;
-    },
     setTrackActive(state, { track, value }) {
       track.active = value;
     },
@@ -105,12 +107,15 @@ const store = new Vuex.Store({
       if (newState === 'playing') {
         eventLoopStart = tracksAudioContext.currentTime;
         trackEventLoopCount = 0;
-        state.tracks.forEach(track =>
-          track.play(tracksAudioContext.currentTime, state.playPosition)
-        );
+        playTracks(state.tracks, state.playPosition);
       } else {
         state.tracks.forEach(track => track.pause());
       }
+    },
+    playAt({ state, dispatch }, playPosition) {
+      console.log('play at');
+      dispatch('setPlayPosition', playPosition);
+      playTracks(state.tracks, state.playPosition);
     },
     stop({ commit, state }) {
       if (state.playState === 'playing') {
@@ -130,17 +135,17 @@ const store = new Vuex.Store({
     toggleClickActive({ commit, state }) {
       commit('setClickActive', !state.clickActive);
     },
-    setTrackGainValue({ commit }, { track, value }) {
-      commit('setTrackGainValue', { track, value });
-      setTrackGain(track);
+    setTrackGainValue({ state }, { track, value }) {
+      track.gainValue = value;
+      setTrackGain(track, state.settings, state);
     },
-    setTrackActive({ commit }, { track, value }) {
+    setTrackActive({ commit, state }, { track, value }) {
       commit('setTrackActive', { track, value });
-      setTrackGain(track);
+      setTrackGain(track, state.settings, state);
     },
     setSoloTrack({ commit, state }, track) {
       commit('setSoloTrack', track);
-      state.tracks.forEach(setTrackGain);
+      state.tracks.forEach(track => setTrackGain(track, state.settings, state));
     },
     toggleSettingsDialog({ commit, state }) {
       commit('setDialog', state.dialog === 'settings' ? null : 'settings');

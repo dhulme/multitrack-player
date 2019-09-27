@@ -33,8 +33,11 @@ export function initMidiEvents(deviceName, store) {
     );
   });
   input.addListener('controlchange', 'all', event => {
+    if (event.value !== 127) {
+      return;
+    }
     store.dispatch(
-      store.rootState.controlEditMode && event.value === 127
+      store.rootState.controlEditMode
         ? 'setControlEdit'
         : 'triggerControlAction',
       { type: 'controlChange', value: event.controller.number }

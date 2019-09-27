@@ -163,7 +163,7 @@ export default {
     },
     setTime(values) {
       const playPosition = values[0] * 60 + values[1] + values[2] / 10;
-      this.$store.dispatch('setPlayPosition', playPosition);
+      this.$store.dispatch('playAt', playPosition);
     }
   }
 };

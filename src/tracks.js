@@ -5,14 +5,18 @@ export const tracksStereoPannerNode = new StereoPannerNode(tracksAudioContext, {
   pan: 0
 });
 
-export function setTrackGain(track, state) {
-  track.setGain(state.trackGainValue, state.soloTrack);
+export function setTrackGain(track, settingsState, rootState) {
+  track.setGain(settingsState.trackGainValue, rootState.soloTrack);
 }
 
 export function newTrack(arrayBuffer) {
-  new Track({
+  return new Track({
     arrayBuffer,
     audioContext: tracksAudioContext,
     stereoPannerNode: tracksStereoPannerNode
   });
+}
+
+export function playTracks(tracks, position) {
+  tracks.forEach(track => track.play(tracksAudioContext.currentTime, position));
 }

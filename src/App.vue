@@ -22,15 +22,16 @@ import Controls from '@/components/Controls';
 import { initClick } from './click';
 import { initMidi } from './midi';
 import { initKeyEvents } from './key';
-import { initSettings } from './store/settings';
 
 export default {
   components: {
     Controls
   },
   async mounted() {
-    await Promise.all([initMidi(), initClick(), initSettings()]);
+    await Promise.all([initMidi(), initClick()]);
+    await this.$store.dispatch('initSettings');
     initKeyEvents(this.$store);
+
     this.$store.commit('setLoading', false);
   },
   watch: {
