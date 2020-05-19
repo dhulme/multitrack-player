@@ -1,8 +1,9 @@
 let id = 0; // TODO improve ID mechanism
 import peaks from 'peaks.js';
+import WaveSurfer from 'wavesurfer.js';
 
 export default class Track {
-  constructor({ arrayBuffer, audioContext, stereoPannerNode }) {
+  constructor({ audioContext, stereoPannerNode, queuePeaks }) {
     this.id = id++;
     this.name = `Track ${id}`;
     this.audioContext = audioContext;
@@ -12,12 +13,17 @@ export default class Track {
     this.gainValue = 1;
     this.active = true;
     this.playing = false;
+    this.queuePeaks = options => queuePeaks(this, options);
+  }
 
-    audioContext.decodeAudioData(arrayBuffer, audioBuffer => {
-      this.audioBuffer = audioBuffer;
-      this.initAudioSource();
-      this.ready = true;
-    });
+  async init(arrayBuffer) {
+    const audioBuffer = await new Promise(res =>
+      this.audioContext.decodeAudioData(arrayBuffer, res)
+    );
+    console.log(audioBuffer);
+    this.audioBuffer = audioBuffer;
+    this.initAudioSource();
+    this.ready = true;
   }
 
   initAudioSource() {
@@ -53,18 +59,24 @@ export default class Track {
     this.peaksOverview._playheadLayer.stop(playheadTime);
   }
 
-  initPeaks(options) {
-    this.peaks = peaks.init(
-      {
-        ...options,
-        webAudio: {
-          audioBuffer: this.audioSource.buffer
-        }
-      },
-      () => {
-        this.peaksOverview = this.peaks.views.getView('overview');
-      }
-    );
+  async initPeaks(options) {
+    await new Promise(res => {
+      this.peaks = peaks.init(
+        {
+          ...options,
+          webAudio: {
+            audioBuffer: this.audioSource.buffer
+          }
+        },
+        res
+      );
+    });
+    this.peaksOverview = this.peaks.views.getView('overview');
+  }
+
+  initWave(options) {
+    const wave = WaveSurfer.create({ ...options });
+    wave.loadDecodedBuffer(this.audioBuffer);
   }
 
   isSoloOrActive(soloTrack) {

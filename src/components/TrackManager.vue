@@ -6,6 +6,7 @@
       :value="files"
       multiple
       placeholder="Add audio files"
+      accept="audio/*"
     />
     <Track
       v-for="(track, index) in $store.state.tracks"

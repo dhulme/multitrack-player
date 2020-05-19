@@ -71,11 +71,15 @@ export default {
   },
   watch: {
     'track.ready'() {
-      this.track.initPeaks({
-        mediaElement: this.$refs.audio,
-        containers: {
-          overview: this.$refs.waveformContainer
-        },
+      // this.track.initPeaks({
+      //   mediaElement: this.$refs.audio,
+      //   containers: {
+      //     overview: this.$refs.waveformContainer
+      //   },
+      //   height: 150
+      // });
+      this.track.initWave({
+        container: this.$refs.waveformContainer,
         height: 150
       });
     },

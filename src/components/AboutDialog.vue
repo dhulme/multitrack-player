@@ -8,7 +8,7 @@
           <a href="https://github.com/dhulme/multitrack-player"
             >github.com/dhulme/multitrack-player</a
           ><br />
-          <a href="http://dhulme.co.uk">dhulme.co.uk</a><br />
+          <a href="https://dhulme.uk">dhulme.uk</a><br />
           <a href="https://twitter.com/hulmed">@hulmed</a>
         </p>
         <p>Version {{ version }}</p>

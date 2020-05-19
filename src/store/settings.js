@@ -86,7 +86,9 @@ const store = {
     async initSettings({ state, dispatch, rootState }) {
       const settings = await get('settings');
       Object.assign(state, settings);
-      initMidiEvents(state.midiDeviceName, { rootState, dispatch });
+      if (state.midiDeviceName) {
+        initMidiEvents(state.midiDeviceName, { rootState, dispatch });
+      }
     }
   }
 };
