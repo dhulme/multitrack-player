@@ -13,10 +13,8 @@
   },
   "dependencies": {
     "@mdi/js": "^5.2.45",
-    "async": "^3.2.0",
     "core-js": "^3.6.5",
     "idb": "^5.0.3",
-    "peaks.js": "^0.21.0",
     "register-service-worker": "^1.6.2",
     "vue": "^2.6.10",
     "vue-router": "^3.0.3",
