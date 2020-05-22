@@ -2,7 +2,7 @@
   <VCard class="mb-4">
     <VCardText>
       <VRow no-gutters>
-        <VCol cols="3" class="pr-4">
+        <VCol cols="12" sm="3" class="pr-4">
           <VTextField v-model="track.name" />
           <VRow dense justify="space-between">
             <VBtn
@@ -27,7 +27,7 @@
             step="0.01"
           />
         </VCol>
-        <VCol cols="9" class="container">
+        <VCol cols="12" sm="9" class="container text-center">
           <VProgressCircular
             indeterminate
             v-if="!track.ready"
@@ -103,10 +103,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.progress {
-  position: absolute;
-  left: 47%;
-  top: 38%;
+@media (min-width: 768px) {
+  .progress {
+    position: absolute;
+    left: 47%;
+    top: 38%;
+  }
 }
 
 .container {

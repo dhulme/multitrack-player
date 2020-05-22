@@ -16,30 +16,6 @@ Built using Vue, the Vuetify UI framework and peaks.js audio waveform library.
 
 ![Screenshot](./screenshot.png)
 
-## Known issues
-- Not fully responsive on smaller displays
-- Project icon needs updating
-- High memory and usage and crashes with high numbers of tracks
-
-## Possible future features
-- Local 'projects' concept, to save and load sessions
-- Support for multiple 'songs' and transitions between them
-- Track pitch + tempo control
-- Track grouping
-
-### Proposed project file format
-```js
-{
-	"name": String,
-	"author": String,
-	"songs": ????,
-	"files": [{
-		"name": String,
-		"size": Number
-	}]
-}
-```
-
 ## Local development setup
 
 ### Compiles and hot-reloads for development
