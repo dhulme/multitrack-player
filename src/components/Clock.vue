@@ -34,7 +34,7 @@ export default {
     set(value, index) {
       const values = [...this.values];
       values[index] = Number(value);
-      this.$emit('input', values);
+      this.$emit('input', { values, index });
     }
   }
 };

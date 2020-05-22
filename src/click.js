@@ -61,8 +61,8 @@ export function setClickPan(value) {
   stereoPannerNode.pan.value = value;
 }
 
-export function resetClickEventLoopCount() {
-  eventLoopCount = 0;
+export function setClickEventLoopCount(count) {
+  eventLoopCount = count;
 }
 
 export function setClickGain(value) {

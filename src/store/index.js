@@ -2,8 +2,9 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import {
   clickEventLoop,
-  resetClickEventLoopCount,
-  getClickBeats
+  setClickEventLoopCount,
+  getClickBeats,
+  getClickInterval
 } from '../click';
 import settings from './settings';
 
@@ -113,8 +114,10 @@ const store = new Vuex.Store({
       }
     },
     playAt({ state, dispatch }, playPosition) {
-      console.log('play at');
       dispatch('setPlayPosition', playPosition);
+      setClickEventLoopCount(
+        Math.floor(playPosition / getClickInterval(state))
+      );
       playTracks(state.tracks, state.playPosition);
     },
     stop({ commit, state }) {
@@ -123,7 +126,7 @@ const store = new Vuex.Store({
       }
       commit('setPlayState', 'stopped');
       commit('setPlayPosition', 0);
-      resetClickEventLoopCount();
+      setClickEventLoopCount(0);
       state.tracks.forEach(track => track.eventLoop(store.state.playPosition));
     },
     addTrack({ commit }, arrayBuffer) {

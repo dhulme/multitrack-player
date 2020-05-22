@@ -43,7 +43,7 @@
       class="mr-4"
     />
 
-    <Clock :values="beatsValues" :icon="mdiMusicNote" />
+    <Clock :values="beatsValues" :icon="mdiMusicNote" @input="setBeats" />
 
     <VBtn text icon @click="$store.dispatch('toggleSettingsDialog')">
       <VIcon>{{ mdiWrench }}</VIcon>
@@ -65,6 +65,8 @@ import {
   mdiMusicNote,
   mdiClockOutline
 } from '@mdi/js';
+
+import { getClickInterval } from '../click';
 
 export default {
   components: {
@@ -161,8 +163,25 @@ export default {
         return 'yellow';
       }
     },
-    setTime(values) {
-      const playPosition = values[0] * 60 + values[1] + values[2] / 10;
+    setTime({ values, index }) {
+      let [minutes, seconds, tenths] = values;
+      if (index === 0) {
+        seconds = 0;
+        tenths = 0;
+      } else if (index === 1) {
+        tenths = 0;
+      }
+      const playPosition = minutes * 60 + seconds + tenths / 10;
+      this.$store.dispatch('playAt', playPosition);
+    },
+    setBeats({ values, index }) {
+      let [bars, beats] = values;
+      if (index === 0) {
+        beats = 1;
+      }
+      const clickInterval = getClickInterval(this.$store.state);
+      const playPosition =
+        bars * clickInterval * 4 + (beats - 1) * clickInterval;
       this.$store.dispatch('playAt', playPosition);
     }
   }
