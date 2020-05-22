@@ -35,7 +35,6 @@ export default {
 
 <style lang="scss">
 .input-thin {
-  max-width: 4rem;
   margin: 0 0.5rem;
 }
 .input-thin input {

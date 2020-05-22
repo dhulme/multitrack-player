@@ -36,10 +36,14 @@ export default {
       }
 
       files.forEach(file => {
+        const name = file.name.substring(0, file.name.lastIndexOf('.'));
         const fileReader = new FileReader();
         fileReader.readAsArrayBuffer(file);
         fileReader.addEventListener('load', () => {
-          this.$store.dispatch('addTrack', fileReader.result);
+          this.$store.dispatch('addTrack', {
+            name,
+            arrayBuffer: fileReader.result
+          });
         });
       });
       this.files = [];

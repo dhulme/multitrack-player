@@ -9,8 +9,9 @@ export function setTrackGain(track, settingsState, rootState) {
   track.setGain(settingsState.trackGainValue, rootState.soloTrack);
 }
 
-export function newTrack(arrayBuffer) {
+export function newTrack({ name, arrayBuffer }) {
   const track = new Track({
+    name,
     audioContext: tracksAudioContext,
     stereoPannerNode: tracksStereoPannerNode
   });

@@ -129,8 +129,8 @@ const store = new Vuex.Store({
       setClickEventLoopCount(0);
       state.tracks.forEach(track => track.eventLoop(store.state.playPosition));
     },
-    addTrack({ commit }, arrayBuffer) {
-      commit('addTrack', newTrack(arrayBuffer));
+    addTrack({ commit }, { name, arrayBuffer }) {
+      commit('addTrack', newTrack({ name, arrayBuffer }));
     },
     removeTrack({ commit }, track) {
       commit('removeTrack', track);

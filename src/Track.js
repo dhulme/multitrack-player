@@ -1,10 +1,8 @@
-let id = 0; // TODO improve ID mechanism
 import WaveSurfer from 'wavesurfer.js';
 
 export default class Track {
-  constructor({ audioContext, stereoPannerNode }) {
-    this.id = id++;
-    this.name = `Track ${id}`;
+  constructor({ audioContext, stereoPannerNode, name }) {
+    this.name = name;
     this.audioContext = audioContext;
     this.stereoPannerNode = stereoPannerNode;
     this.ready = false;

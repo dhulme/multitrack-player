@@ -33,8 +33,8 @@
       <VIcon>{{ mdiMetronome }}</VIcon>
     </VBtn>
 
-    <TextField v-model="clickBpm" />
-    <TextField v-model="clickTimeSignature" />
+    <TextField v-model="clickBpm" class="small-input" />
+    <TextField v-model="clickTimeSignature" class="small-input" />
 
     <Clock
       :values="timeValues"
@@ -188,4 +188,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.small-input {
+  max-width: 4rem;
+}
+</style>

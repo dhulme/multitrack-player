@@ -26,11 +26,13 @@
             max="1.5"
             step="0.01"
           />
-
-          <audio src="" ref="audio" />
         </VCol>
-        <VCol cols="9">
-          <VProgressCircular v-if="!track.ready" indeterminate />
+        <VCol cols="9" class="container">
+          <VProgressCircular
+            indeterminate
+            v-if="!track.ready"
+            class="progress"
+          />
           <div ref="waveformContainer" />
         </VCol>
       </VRow>
@@ -73,7 +75,10 @@ export default {
     'track.ready'() {
       this.track.initWaveform({
         container: this.$refs.waveformContainer,
-        height: 150
+        height: 150,
+        cursorColor: 'rgba(0, 0, 0, 0.4)',
+        waveColor: '#999',
+        progressColor: 'rgba(0, 0, 0, 0.4)'
       });
     },
     active(active) {
@@ -98,7 +103,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-audio {
-  display: none;
+.progress {
+  position: absolute;
+  left: 47%;
+  top: 38%;
+}
+
+.container {
+  position: relative;
 }
 </style>
