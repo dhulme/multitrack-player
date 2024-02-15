@@ -13,7 +13,8 @@ const store = {
     /**
      * { [actionName]: { type: 'note' | 'controlChange' | 'key', value: any } }
      */
-    controlEditMap: {}
+    controlEditMap: {},
+    isMidiSupported: true // Assume true by default
   },
   getters: {
     getControlMapping(state) {
@@ -38,6 +39,9 @@ const store = {
     },
     setClickGainValue(state, value) {
       state.clickGainValue = value;
+    },
+    setMidiSupported(state, isSupported) {
+      state.isMidiSupported = isSupported;
     }
   },
   actions: {
@@ -88,6 +92,13 @@ const store = {
       Object.assign(state, settings);
       if (state.midiDeviceName) {
         initMidiEvents(state.midiDeviceName, { rootState, dispatch });
+      }
+    },
+    checkMidiSupport({ commit }) {
+      if (navigator.requestMIDIAccess) {
+        commit('setMidiSupported', true);
+      } else {
+        commit('setMidiSupported', false);
       }
     }
   }

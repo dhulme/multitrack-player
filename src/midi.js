@@ -1,14 +1,16 @@
 import webMidi from 'webmidi';
 
-export function initMidi() {
+export function initMidi(store) {
   return new Promise((resolve, reject) => {
     webMidi.enable(err => {
       if (err) {
+        store.commit('setMidiSupported', false);
         reject(err);
       } else {
+        store.commit('setMidiSupported', true);
         resolve();
       }
-    });
+    }, true); // Passing true as the second argument to enable MIDI in sysex mode if needed
   });
 }
 

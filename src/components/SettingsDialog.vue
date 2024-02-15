@@ -36,6 +36,7 @@
             :items="midiDevices"
             label="MIDI Control Device"
             v-model="midiDevice"
+            :disabled="!isMidiSupported"
           />
 
           <VLabel>Edit MIDI and key mapping</VLabel>
@@ -45,6 +46,7 @@
               small
               outlined
               @click="$store.dispatch('toggleControlEditMode')"
+              :disabled="!isMidiSupported"
               >MIDI</VBtn
             >
             <VBtn
@@ -126,6 +128,9 @@ export default {
       set(value) {
         this.$store.dispatch('setMidiDeviceName', value);
       }
+    },
+    isMidiSupported() {
+      return this.$store.state.isMidiSupported;
     }
   }
 };

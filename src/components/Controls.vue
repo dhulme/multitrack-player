@@ -1,5 +1,8 @@
 <template>
   <VRow justify="end" align="center">
+    <VAlert v-if="!isMidiSupported" type="error" dense text>
+      MIDI is not supported by your browser.
+    </VAlert>
     <VBtn
       v-if="controlEditMode"
       small
@@ -125,6 +128,9 @@ export default {
     },
     controlEditMode() {
       return this.$store.state.controlEditMode;
+    },
+    isMidiSupported() {
+      return this.$store.state.isMidiSupported;
     }
   },
   methods: {
